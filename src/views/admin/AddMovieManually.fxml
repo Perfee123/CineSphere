@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: white; -fx-background: white; -fx-border-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.AddMovieManuallyController" stylesheets="@../ticket/ticket.css">
+    
+    <VBox spacing="20.0" style="-fx-background-color: white; -fx-padding: 30 60 60 60;">
+        
+        <!-- Top Nav & Actions -->
+        <HBox alignment="CENTER_LEFT">
+            <Button text="← Back" onAction="#handleBack" styleClass="secondary-action-btn" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Save Movie" onAction="#handleSave" styleClass="primary-action-btn" />
+        </HBox>
+        
+        <!-- Header -->
+        <VBox spacing="5.0">
+            <Label text="Add Movie Manually" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Enter movie details below. Select local images from your PC." style="-fx-font-size: 15px; -fx-text-fill: #666666;" />
+        </VBox>
+        
+        <Region prefHeight="10.0" />
+        
+        <!-- Form Container (Centered) -->
+        <VBox alignment="CENTER" spacing="30.0">
+            
+            <!-- Basic Information Card -->
+            <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 30px; -fx-pref-width: 600px; -fx-max-width: 600px;">
+                <Label text="Basic Information" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+                
+                <VBox spacing="5.0">
+                    <Label text="Title" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="titleField" promptText="Movie Title" styleClass="search-field" style="-fx-pref-width: 500px; -fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+                
+                <HBox spacing="20.0">
+                    <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Genre" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <TextField fx:id="genreField" promptText="e.g. Action, Sci-Fi" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                    </VBox>
+                    <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                        <Label text="Duration (mins)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <TextField fx:id="durationField" promptText="120" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                    </VBox>
+                </HBox>
+                
+                <VBox spacing="5.0">
+                    <Label text="Synopsis" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextArea fx:id="synopsisArea" prefRowCount="4" wrapText="true" style="-fx-border-color: #ced4da; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 5px; -fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+            </VBox>
+            
+            <!-- Images Card -->
+            <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 30px; -fx-pref-width: 600px; -fx-max-width: 600px;">
+                <Label text="Images" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+                
+                <VBox spacing="5.0">
+                    <Label text="Poster Image" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <HBox alignment="CENTER_LEFT" spacing="15.0">
+                        <Button text="Choose File" onAction="#handleChoosePoster" styleClass="search-btn" style="-fx-background-color: white;" />
+                        <Label fx:id="posterLabel" text="No file selected..." style="-fx-font-size: 13px; -fx-font-style: italic; -fx-text-fill: #777777;" />
+                    </HBox>
+                </VBox>
+                
+                <VBox spacing="5.0">
+                    <Label text="Cinematic Banner Image" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <HBox alignment="CENTER_LEFT" spacing="15.0">
+                        <Button text="Choose File" onAction="#handleChooseBanner" styleClass="search-btn" style="-fx-background-color: white;" />
+                        <Label fx:id="bannerLabel" text="No file selected..." style="-fx-font-size: 13px; -fx-font-style: italic; -fx-text-fill: #777777;" />
+                    </HBox>
+                </VBox>
+            </VBox>
+            
+            <!-- Pricing & Schedule Card -->
+            <VBox spacing="20.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 30px; -fx-pref-width: 600px; -fx-max-width: 600px;">
+                <Label text="Pricing &amp; Schedule" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+                
+                <GridPane hgap="20.0" vgap="15.0">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50" />
+                        <ColumnConstraints percentWidth="50" />
+                    </columnConstraints>
+                    
+                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Adult Ticket ($)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <TextField fx:id="adultPriceField" promptText="350.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                    </VBox>
+                    
+                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Kids Ticket ($)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <TextField fx:id="kidsPriceField" promptText="200.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                    </VBox>
+                    
+                    <VBox spacing="5.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Showing From (DD/MM/YYYY)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <DatePicker fx:id="showingFromPicker" styleClass="search-field" style="-fx-font-size: 14px; -fx-pref-width: 300px; -fx-background-color: white;" />
+                    </VBox>
+                    
+                    <VBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Showing Until (DD/MM/YYYY)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                        <DatePicker fx:id="showingUntilPicker" styleClass="search-field" style="-fx-font-size: 14px; -fx-pref-width: 300px; -fx-background-color: white;" />
+                    </VBox>
+                </GridPane>
+            </VBox>
+            
+        </VBox>
+        
+    </VBox>
+</ScrollPane>

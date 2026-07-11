@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.BookingVerificationController" stylesheets="@ticket.css" style="-fx-background-color: #ffffff; -fx-padding: 20;">
+    
+    <Button text="← Back to Booking History" styleClass="secondary-action-btn" onAction="#handleBack" />
+    
+    <VBox spacing="5">
+        <Label text="Booking Verification" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+        <Label text="Validate customer check-in or manage cancellations." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+    </VBox>
+
+    <HBox spacing="60" VBox.vgrow="ALWAYS" alignment="TOP_LEFT">
+        
+        <!-- Left Panel: Ticket Card -->
+        <VBox alignment="CENTER" maxWidth="400" minWidth="400" maxHeight="-Infinity" styleClass="receipt-card" spacing="20">
+            <padding>
+                <Insets top="40" right="30" bottom="40" left="30" />
+            </padding>
+            <Label text="CINESPHERE TICKET" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0d6efd;" />
+            <Label fx:id="bookingIdLabel" text="Booking ID: BK-2" style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" />
+            
+            <VBox fx:id="qrCodeContainer" alignment="CENTER" styleClass="qr-placeholder" prefWidth="180" prefHeight="180" minWidth="180" minHeight="180" maxWidth="180">
+                <Label text="[QR Code]" style="-fx-text-fill: #adb5bd; -fx-font-size: 14px;" />
+            </VBox>
+            
+            <VBox alignment="CENTER" spacing="5">
+                <Label fx:id="movieTitleLabel" text="The Dark Knight" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+                <Label fx:id="showtimeLabel" text="14:00:00 - Hall A" style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" />
+            </VBox>
+            
+            <Separator style="-fx-padding: 10 0;" />
+            
+            <Label fx:id="seatsLabel" text="Seats: E7, E8" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+            <Label fx:id="totalPaidLabel" text="Total Paid: \$400.00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0d6efd;" />
+            
+            <Region VBox.vgrow="ALWAYS" />
+            <Label fx:id="ticketBadgeLabel" text="CONFIRMED" styleClass="status-badge" style="-fx-font-size: 14px;" />
+        </VBox>
+
+        <!-- Right Panel: Validation Info -->
+        <VBox spacing="20" HBox.hgrow="ALWAYS">
+            
+            <VBox styleClass="validation-card" spacing="10">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15" />
+                </padding>
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Current Ticket Status:" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" HBox.hgrow="ALWAYS" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="currentStatusLabel" text="CONFIRMED" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0d6efd;" />
+                </HBox>
+                <Separator />
+                <VBox spacing="10">
+                    <Label text="System Notes / Validation Info" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+                    <Label fx:id="systemNotesLabel" text="This ticket is active and ready for check-in." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" wrapText="true" />
+                </VBox>
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Button fx:id="checkInBtn" text="Check-In Customer" styleClass="primary-action-btn" onAction="#handleCheckIn" />
+                <Button fx:id="cancelBtn" text="Cancel &amp; Refund" styleClass="danger-action-btn" onAction="#handleCancel" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button text="Download Receipt" styleClass="secondary-action-btn" onAction="#handleDownloadReceipt" />
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

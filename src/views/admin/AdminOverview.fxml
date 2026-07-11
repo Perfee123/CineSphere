@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<VBox prefHeight="768.0" prefWidth="774.0" spacing="30.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.AdminOverviewController" stylesheets="@../ticket/ticket.css">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="5.0">
+            <Label text="Admin Overview" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Welcome, System Administrator. Here is today's system summary." style="-fx-font-size: 14px; -fx-text-fill: #666666;" />
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" onAction="#handleAddNewMovie" text="+ Add New Movie" style="-fx-background-color: #0066ff; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 20px; -fx-padding: 10px 20px; -fx-cursor: hand;" />
+    </HBox>
+
+    <!-- Cards Section -->
+    <HBox spacing="20.0">
+        <!-- Card 1 -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e0e0e0; -fx-border-radius: 8px; -fx-border-width: 1px;" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <Label text="Active Movies" style="-fx-font-size: 13px; -fx-text-fill: #888888;" />
+            <Label fx:id="activeMoviesLabel" text="10" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Currently showing" style="-fx-font-size: 12px; -fx-text-fill: #999999;" />
+        </VBox>
+
+        <!-- Card 2 -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e0e0e0; -fx-border-radius: 8px; -fx-border-width: 1px;" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <Label text="Total Staff" style="-fx-font-size: 13px; -fx-text-fill: #888888;" />
+            <Label fx:id="totalStaffLabel" text="2" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Registered accounts" style="-fx-font-size: 12px; -fx-text-fill: #999999;" />
+        </VBox>
+
+        <!-- Card 3 -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e0e0e0; -fx-border-radius: 8px; -fx-border-width: 1px;" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <Label text="Today's Bookings" style="-fx-font-size: 13px; -fx-text-fill: #888888;" />
+            <Label fx:id="todaysBookingsLabel" text="7" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Tickets sold today" style="-fx-font-size: 12px; -fx-text-fill: #999999;" />
+        </VBox>
+
+        <!-- Card 4 -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 8px; -fx-border-color: #e0e0e0; -fx-border-radius: 8px; -fx-border-width: 1px;" HBox.hgrow="ALWAYS">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <Label text="Today's Revenue" style="-fx-font-size: 13px; -fx-text-fill: #888888;" />
+            <Label fx:id="todaysRevenueLabel" text="3850.00" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Gross daily income" style="-fx-font-size: 12px; -fx-text-fill: #999999;" />
+        </VBox>
+    </HBox>
+
+    <!-- Table Section -->
+    <VBox spacing="10.0" VBox.vgrow="ALWAYS">
+        <Label text="Currently Active Shows" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+        
+        <TableView fx:id="activeShowsTable" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 4px; -fx-border-width: 1px;">
+            <columns>
+                <TableColumn fx:id="colShowId" prefWidth="100.0" text="Show ID" />
+                <TableColumn fx:id="colMovieTitle" prefWidth="200.0" text="Movie Title" />
+                <TableColumn fx:id="colHall" prefWidth="100.0" text="Hall" />
+                <TableColumn fx:id="colTime" prefWidth="100.0" text="Time" />
+                <TableColumn fx:id="colSeats" prefWidth="100.0" text="Seats Filled" />
+                <TableColumn fx:id="colStatus" prefWidth="100.0" text="Status" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+</VBox>

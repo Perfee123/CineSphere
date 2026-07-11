@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.MovieDetailsController" stylesheets="@ticket.css">
+    <VBox spacing="0" style="-fx-background-color: #ffffff;">
+        
+        <!-- Hero Banner Area -->
+        <StackPane fx:id="heroBanner" minHeight="300" maxHeight="300">
+            <!-- Dark Overlay -->
+            <Region style="-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3));" />
+            
+            <!-- Top Nav (Back Button) inside banner -->
+            <VBox alignment="TOP_LEFT">
+                <padding>
+                    <Insets top="20" left="40" />
+                </padding>
+                <Button text="← Back" styleClass="secondary-action-btn" onAction="#handleBack" />
+            </VBox>
+        </StackPane>
+
+        <!-- Content Area -->
+        <HBox spacing="40" style="-fx-padding: 40;">
+            
+            <!-- Poster -->
+            <VBox>
+                <ImageView fx:id="posterImage" fitWidth="220" preserveRatio="true" />
+            </VBox>
+
+            <!-- Details -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS">
+                <VBox spacing="5">
+                    <Label fx:id="titleLabel" text="Loading..." style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+                    <Label fx:id="taglineLabel" text="" style="-fx-font-size: 15px; -fx-font-style: italic; -fx-text-fill: #6c757d;" />
+                </VBox>
+
+                <HBox fx:id="genresBox" spacing="10" />
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="ratingLabel" text="⭐ 0.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
+                    <Label text="/ 10" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
+                    <Label text="(TMDB)" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
+                </HBox>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label fx:id="yearLabel" text="YYYY" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label text="•" style="-fx-text-fill: #6c757d;" />
+                    <Label fx:id="languageLabel" text="EN" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label text="•" style="-fx-text-fill: #6c757d;" />
+                    <Label fx:id="durationLabel" text="⏱ 0 mins" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                </HBox>
+
+                <Label fx:id="popularityLabel" text="Popularity: 0.0 • Released" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+
+                <Region prefHeight="10" />
+                
+                <!-- Primary Action Button -->
+                <Button fx:id="actionButton" text="+ Book Tickets" styleClass="primary-action-btn" onAction="#handleBookTickets" />
+            </VBox>
+        </HBox>
+
+        <!-- Synopsis Full Width -->
+        <VBox spacing="15" style="-fx-padding: 0 40 40 40;">
+            <Label text="Synopsis" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+            <Separator />
+            <Label fx:id="overviewLabel" text="Loading synopsis..." wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #6c757d; -fx-line-spacing: 5px;" />
+        </VBox>
+
+    </VBox>
+</ScrollPane>

@@ -1,0 +1,3 @@
+@echo off
+echo Running CineSphere...
+java -Djava.library.path=lib --module-path lib --add-modules javafx.controls,javafx.fxml -cp "bin;lib/*" Main

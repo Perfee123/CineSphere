@@ -1,0 +1,428 @@
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e5e7eb;
+    -fx-padding: 20;
+    -fx-spacing: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+}
+
+.stat-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6c757d;
+}
+
+.stat-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
+
+.stat-subtitle {
+    -fx-font-size: 12px;
+    -fx-text-fill: #adb5bd;
+}
+
+.action-btn {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 20;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+}
+
+.action-btn:hover {
+    -fx-background-color: #0b5ed7;
+}
+
+.search-field {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 8 20;
+}
+
+.search-field.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.search-combo {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-pref-height: 35;
+}
+
+.search-btn {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.search-btn:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.shows-table {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+}
+
+.shows-table .column-header {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e5e7eb transparent;
+    -fx-padding: 10 5;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell {
+    -fx-border-color: transparent transparent #f3f4f6 transparent;
+    -fx-cell-size: 45px;
+}
+
+.table-row-available, .table-row-available .table-cell {
+    -fx-background-color: #e6f8f0;
+}
+
+.table-row-available:hover, .table-row-available:hover .table-cell {
+    -fx-background-color: #d1f0e1;
+}
+
+.table-row-booked, .table-row-booked .table-cell {
+    -fx-background-color: #fde8e8;
+}
+
+.table-row-booked:hover, .table-row-booked:hover .table-cell {
+    -fx-background-color: #fad1d1;
+}
+
+.info-btn {
+    -fx-background-color: #e7f1ff;
+    -fx-border-color: #b6d4fe;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.info-btn:hover {
+    -fx-background-color: #cfe2ff;
+}
+
+/* Booking Tickets Styles */
+.movie-list {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.movie-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+.movie-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+.movie-list .list-cell:filled:selected:focused, .movie-list .list-cell:filled:selected {
+    -fx-background-color: transparent;
+}
+.movie-list .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-padding: -7;
+}
+
+.time-slot-btn {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #212529;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.time-slot-btn:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.time-slot-btn-active {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: white;
+    -fx-border-color: #0d6efd;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.primary-action-btn-disabled {
+    -fx-background-color: #f1f3f5;
+    -fx-text-fill: #adb5bd;
+    -fx-font-weight: bold;
+    -fx-padding: 12 30;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+}
+
+.primary-action-btn {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 12 30;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-cursor: hand;
+}
+.primary-action-btn:hover {
+    -fx-background-color: #0b5ed7;
+}
+
+/* Seat Selection Styles */
+.back-btn {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 8 20;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.back-btn:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+.seat-btn {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+.seat-btn:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #0d6efd;
+}
+
+.seat-btn-selected {
+    -fx-background-color: #0d6efd;
+    -fx-border-color: #0d6efd;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+.seat-btn-selected:hover {
+    -fx-background-color: #0b5ed7;
+}
+
+.seat-btn-booked {
+    -fx-background-color: #6c757d;
+    -fx-border-color: #6c757d;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.seat-btn-maintenance {
+    -fx-background-color: #ffc107;
+    -fx-border-color: #ffc107;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.summary-card {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 15, 0, 0, 5);
+}
+
+.clear-btn {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 15;
+    -fx-cursor: hand;
+}
+.clear-btn:hover {
+    -fx-background-color: #c82333;
+}
+
+.counter-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #e5e7eb;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 5 10;
+    -fx-cursor: hand;
+}
+.counter-btn:hover {
+    -fx-background-color: #f8f9fa;
+}
+.counter-label {
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1 0 1 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 6 15;
+}
+
+/* Booking Confirmed Styles */
+.receipt-card {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 10);
+}
+
+.qr-placeholder {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #dee2e6;
+    -fx-border-style: dashed;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.secondary-action-btn {
+    -fx-background-color: white;
+    -fx-text-fill: #212529;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 10 25;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.secondary-action-btn:hover {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Booking History & Verification Styles */
+.table-row-confirmed, .table-row-confirmed .table-cell {
+    -fx-background-color: #e8f5e9;
+}
+.table-row-cancelled, .table-row-cancelled .table-cell {
+    -fx-background-color: #ffebee;
+}
+
+.validation-card {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.status-badge {
+    -fx-padding: 5 15;
+    -fx-font-weight: bold;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.badge-confirmed {
+    -fx-background-color: #0d6efd;
+    -fx-text-fill: white;
+}
+
+.badge-cancelled {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+.badge-pending {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #212529;
+}
+
+.danger-action-btn {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-padding: 10 25;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+}
+
+.danger-action-btn:hover {
+    -fx-background-color: #c82333;
+}
+
+/* TMDB Movie Cards & Details */
+.movie-grid-card {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.movie-grid-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 20, 0, 0, 10);
+    -fx-border-color: #0d6efd;
+}
+
+.genre-badge {
+    -fx-background-color: #e8f0fe;
+    -fx-text-fill: #1a73e8;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 4 12;
+    -fx-background-radius: 15;
+}
+
+/* Movie List Selection (Left Pane) */
+.movie-list-item {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.movie-list-item:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);
+    -fx-border-color: #0d6efd;
+}
+
+.movie-list-item-selected {
+    -fx-background-color: #f0f7ff;
+    -fx-border-color: #0d6efd;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.movie-list-item-sold-out {
+    -fx-background-color: #fff5f5;
+    -fx-border-color: #dc3545;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-cursor: default;
+    -fx-opacity: 0.8;
+}
+
+.table-row-checkedin, .table-row-checkedin .table-cell { -fx-background-color: #d1e7dd; }
+.table-row-checkedin:hover, .table-row-checkedin:hover .table-cell { -fx-background-color: #badbcc; }
+.table-row-cancelled, .table-row-cancelled .table-cell { -fx-background-color: #f8d7da; }
+.table-row-cancelled:hover, .table-row-cancelled:hover .table-cell { -fx-background-color: #f1b0b7; }
+
+.table-row-active, .table-row-active .table-cell { -fx-background-color: #d1e7dd; }
+.table-row-active:hover, .table-row-active:hover .table-cell { -fx-background-color: #badbcc; }
+.table-row-inactive, .table-row-inactive .table-cell { -fx-background-color: #f8d7da; }
+.table-row-inactive:hover, .table-row-inactive:hover .table-cell { -fx-background-color: #f1b0b7; }

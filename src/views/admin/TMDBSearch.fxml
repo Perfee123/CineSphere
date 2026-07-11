@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox style="-fx-background-color: #f8f9fa;" stylesheets="@../ticket/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.admin.TMDBSearchController">
+    
+    <!-- Top Bar with Back Button -->
+    <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 40;">
+        <Button text="← Back" onAction="#handleBack" styleClass="search-btn" />
+    </HBox>
+    
+    <!-- Centered Search Header -->
+    <VBox alignment="CENTER" spacing="20.0" style="-fx-padding: 20 40 40 40;">
+        <Label text="Discover Movies" style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+        <Label text="Search the global TMDB database and instantly add movies to your theater." style="-fx-font-size: 16px; -fx-text-fill: #666666;" />
+        
+        <HBox alignment="CENTER" spacing="15.0" style="-fx-padding: 20 0 0 0;">
+            <TextField fx:id="searchField" promptText="Search for a movie..." onAction="#handleSearch" style="-fx-pref-width: 500px; -fx-font-size: 16px;" styleClass="search-field" />
+            <Button text="Search" onAction="#handleSearch" styleClass="action-btn" />
+        </HBox>
+        
+        <Label fx:id="statusLabel" text="Ready to search." style="-fx-font-size: 14px; -fx-text-fill: #999999; -fx-padding: 10 0 0 0;" />
+    </VBox>
+    
+    <!-- Results Grid -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="resultsContainer" hgap="30.0" vgap="40.0" alignment="TOP_LEFT" style="-fx-padding: 0 40 60 40;" />
+    </ScrollPane>
+    
+</VBox>

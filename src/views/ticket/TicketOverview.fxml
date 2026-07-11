@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.TicketOverviewController" stylesheets="@ticket.css" style="-fx-background-color: #ffffff; -fx-padding: 30;">
+    <!-- Header Area -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Ticket Counter" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+            <Label text="Welcome back, Counter Staff. Have a great shift." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
+        </VBox>
+        <Button text="+ New Booking" onAction="#handleNewBooking" styleClass="action-btn" />
+    </HBox>
+
+    <!-- Stats Cards -->
+    <HBox spacing="20">
+        <!-- Card 1 -->
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="200">
+            <Label text="Now Showing" styleClass="stat-title"/>
+            <Label fx:id="statActiveMovies" text="0" styleClass="stat-value"/>
+            <Label text="Movies available" styleClass="stat-subtitle"/>
+        </VBox>
+        <!-- Card 2 -->
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="200">
+            <Label text="Today's Shows" styleClass="stat-title"/>
+            <Label fx:id="statTodayShows" text="0" styleClass="stat-value"/>
+            <Label text="Currently scheduled" styleClass="stat-subtitle"/>
+        </VBox>
+        <!-- Card 3 -->
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="200">
+            <Label text="Total Bookings" styleClass="stat-title"/>
+            <Label fx:id="statTotalBookings" text="0" styleClass="stat-value"/>
+            <Label text="Confirmed today" styleClass="stat-subtitle"/>
+        </VBox>
+        <!-- Card 4 -->
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="200">
+            <Label text="Tickets Sold" styleClass="stat-title"/>
+            <Label fx:id="statTicketsSold" text="0" styleClass="stat-value"/>
+            <Label text="Total tickets today" styleClass="stat-subtitle"/>
+        </VBox>
+    </HBox>
+
+    <!-- Table Section Header -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Today's Schedule" style="-fx-font-size: 20px; -fx-font-weight: bold;" HBox.hgrow="ALWAYS"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search movies.." styleClass="search-field"/>
+        <Button text="Search" styleClass="search-btn"/>
+    </HBox>
+
+    <!-- TableView -->
+    <TableView fx:id="showsTable" VBox.vgrow="ALWAYS" styleClass="shows-table">
+        <columns>
+            <TableColumn fx:id="colInfo" text="" prefWidth="40" sortable="false"/>
+            <TableColumn fx:id="colShowId" text="Show ID" prefWidth="100"/>
+            <TableColumn fx:id="colMovieTitle" text="Movie Title" prefWidth="250"/>
+            <TableColumn fx:id="colHall" text="Hall" prefWidth="120"/>
+            <TableColumn fx:id="colTime" text="Time" prefWidth="100"/>
+            <TableColumn fx:id="colSeats" text="Seats" prefWidth="100"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="150"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</VBox>
+

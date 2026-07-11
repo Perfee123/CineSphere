@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.BookingTicketController" stylesheets="@ticket.css" style="-fx-background-color: #ffffff;">
+    
+    <!-- Left Pane: Movie List -->
+    <VBox minWidth="350.0" prefWidth="350.0" maxWidth="350.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-border-color: transparent #e5e7eb transparent transparent;">
+        <padding>
+            <Insets bottom="30.0" left="30.0" right="5.0" top="30.0" />
+        </padding>
+        <TextField fx:id="searchField" promptText="Search movies..." styleClass="search-field" />
+        <ListView fx:id="movieListView" styleClass="movie-list" VBox.vgrow="ALWAYS" />
+    </VBox>
+
+    <!-- Right Pane: Details Area -->
+    <StackPane HBox.hgrow="ALWAYS" style="-fx-background-color: #ffffff;">
+        
+        <!-- Empty State -->
+        <VBox fx:id="emptyStatePane" alignment="CENTER_LEFT" spacing="20.0" visible="true">
+            <padding>
+                <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+            </padding>
+            <Label text="Select a movie to view details" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+            <Label text="Search and select a movie from the left panel to see available showtimes and book your tickets." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" wrapText="true" />
+        </VBox>
+
+        <!-- Selected State -->
+        <BorderPane fx:id="detailsPane" visible="false">
+            <center>
+                <VBox spacing="20.0" BorderPane.alignment="TOP_LEFT">
+                    <padding>
+                        <Insets bottom="40.0" left="50.0" right="50.0" top="40.0" />
+                    </padding>
+                    <Label fx:id="movieTitleLabel" text="Movie Title" style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+                    <Label fx:id="movieMetaLabel" text="Action • 152 mins" style="-fx-font-size: 14px; -fx-text-fill: #0d6efd; -fx-font-weight: bold;" />
+                    <Label fx:id="movieDescLabel" text="Description goes here." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" wrapText="true" />
+                    
+                    <Region prefHeight="20.0" />
+                    <Label text="Available Time Slots" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
+                    
+                    <!-- FlowPane for time slots -->
+                    <FlowPane fx:id="timeSlotsPane" hgap="15" vgap="15" />
+                </VBox>
+            </center>
+            <bottom>
+                <HBox alignment="BOTTOM_RIGHT" BorderPane.alignment="CENTER">
+                    <padding>
+                        <Insets bottom="30.0" right="50.0" />
+                    </padding>
+                    <Button fx:id="selectSeatsBtn" text="Select Seats →" styleClass="primary-action-btn-disabled" disable="true" onAction="#handleSelectSeats" />
+                </HBox>
+            </bottom>
+        </BorderPane>
+
+    </StackPane>
+</HBox>

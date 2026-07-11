@@ -1,0 +1,48 @@
+.sidebar {
+    -fx-background-color: #0b0c10;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8a8d93;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-color: transparent;
+    -fx-alignment: center-left;
+    -fx-padding: 15 20 15 20;
+    -fx-min-height: 45px;
+}
+
+.nav-button:hover {
+    -fx-background-color: #12141a;
+    -fx-text-fill: #ffffff;
+}
+
+.nav-button-active {
+    -fx-background-color: #12151f;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-color: #0d6efd;
+    -fx-alignment: center-left;
+    -fx-padding: 15 20 15 20;
+    -fx-min-height: 45px;
+}
+
+.sign-out-button {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20 10 20;
+    -fx-min-height: 35px;
+}
+
+.sign-out-button:hover {
+    -fx-background-color: #c82333;
+}
