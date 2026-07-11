@@ -58,3 +58,7 @@ logs/
 
 download_jars.ps1
 built.bat
+
+# Add these lines to .gitignore
+lib/*.dll
+lib/*.jar
