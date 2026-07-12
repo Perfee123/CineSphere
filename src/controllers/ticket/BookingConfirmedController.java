@@ -13,6 +13,7 @@ public class BookingConfirmedController {
     @FXML private Label showtimeLabel;
     @FXML private Label seatsLabel;
     @FXML private Label totalPaidLabel;
+    @FXML private Label ticketBadgeLabel;
     @FXML private javafx.scene.layout.VBox qrCodeContainer;
 
     public void setReceiptData(String bookingId, String movieTitle, String showtime, String seats, String totalPaid) {
@@ -22,13 +23,20 @@ public class BookingConfirmedController {
         seatsLabel.setText("Seats: " + seats);
         totalPaidLabel.setText("Total Paid: " + totalPaid);
 
-        // Generate QR Code data string format: BK-1|The Dark Knight|14:00 - Hall A|Seats: A1, A2
-        String qrData = bookingId + "|" + movieTitle + "|" + showtime + "|" + seats;
-        javafx.scene.image.Image qrImg = utils.QRCodeUtils.generateQRCodeImage(qrData, 120, 120);
+        // Generate neat QR Code data
+        String qrData = "🎟️ CINESPHERE TICKET 🎟️\n" +
+                        "========================\n" +
+                        "Booking ID: " + bookingId + "\n" +
+                        "Movie: " + movieTitle + "\n" +
+                        "Showtime: " + showtime + "\n" +
+                        "Seats: " + seats + "\n" +
+                        "========================\n" +
+                        "Valid for admission.";
+        javafx.scene.image.Image qrImg = utils.QRCodeUtils.generateQRCodeImage(qrData, 180, 180);
         if (qrImg != null) {
             javafx.scene.image.ImageView imgView = new javafx.scene.image.ImageView(qrImg);
-            imgView.setFitWidth(120);
-            imgView.setFitHeight(120);
+            imgView.setFitWidth(180);
+            imgView.setFitHeight(180);
             qrCodeContainer.getChildren().clear();
             qrCodeContainer.getChildren().add(imgView);
             qrCodeContainer.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;"); // Remove dashed border
@@ -37,9 +45,15 @@ public class BookingConfirmedController {
 
     @FXML
     public void handleDownloadReceipt() {
-        javafx.scene.Node receiptCard = bookingIdLabel.getParent().getParent(); // StackPane -> VBox(receipt-card)
-        String bId = bookingIdLabel.getText().replace("Booking ID: ", "");
-        utils.ReceiptUtils.downloadReceiptAsImage(receiptCard, bookingIdLabel.getScene().getWindow(), "Receipt_" + bId);
+        javafx.scene.Node receiptCard = bookingIdLabel.getParent(); // The VBox receipt-card
+        
+        // Hide badge before downloading
+        boolean wasVisible = ticketBadgeLabel.isVisible();
+        ticketBadgeLabel.setVisible(false);
+        
+        utils.ReceiptUtils.downloadReceiptAsImage(receiptCard, bookingIdLabel.getScene().getWindow(), "Receipt_" + bookingIdLabel.getText().replace("Booking ID: ", ""));
+        
+        ticketBadgeLabel.setVisible(wasVisible);
     }
 
     @FXML

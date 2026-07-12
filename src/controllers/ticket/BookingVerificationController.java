@@ -41,8 +41,15 @@ public class BookingVerificationController {
         ticketBadgeLabel.setText(item.getStatus());
         currentStatusLabel.setText(item.getStatus());
 
-        // Generate QR Code data string format: BK-1|The Dark Knight|14:00 - Hall A|Seats: A1, A2
-        String qrData = item.getBookingId() + "|" + item.getMovieTitle() + "|" + item.getDate() + " - " + item.getHall() + "|" + item.getSeats();
+        // Generate neat QR Code data
+        String qrData = "🎟️ CINESPHERE TICKET 🎟️\n" +
+                        "========================\n" +
+                        "Booking ID: " + item.getBookingId() + "\n" +
+                        "Movie: " + item.getMovieTitle() + "\n" +
+                        "Showtime: " + item.getDate() + " - " + item.getHall() + "\n" +
+                        "Seats: " + item.getSeats() + "\n" +
+                        "========================\n" +
+                        "Valid for admission.";
         javafx.scene.image.Image qrImg = utils.QRCodeUtils.generateQRCodeImage(qrData, 180, 180);
         if (qrImg != null) {
             javafx.scene.image.ImageView imgView = new javafx.scene.image.ImageView(qrImg);
@@ -135,7 +142,15 @@ public class BookingVerificationController {
     public void handleDownloadReceipt() {
         if (currentItem != null) {
             javafx.scene.Node receiptCard = bookingIdLabel.getParent(); // The VBox receipt-card is the parent
+            
+            // Hide the status badge for the digital receipt
+            boolean wasVisible = ticketBadgeLabel.isVisible();
+            ticketBadgeLabel.setVisible(false);
+            
             utils.ReceiptUtils.downloadReceiptAsImage(receiptCard, bookingIdLabel.getScene().getWindow(), "Receipt_" + currentItem.getBookingId());
+            
+            // Restore visibility
+            ticketBadgeLabel.setVisible(wasVisible);
         }
     }
     

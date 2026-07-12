@@ -74,6 +74,13 @@ public class EditMoviePricingDialogController {
             
             if (unsavedMovieDto != null) {
                 // We are adding a new TMDB movie
+                // Download images locally
+                String localPoster = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.poster_path, "w500", "poster");
+                String localBanner = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.backdrop_path, "original", "banner");
+                
+                if (localPoster != null) unsavedMovieDto.poster_path = localPoster;
+                if (localBanner != null) unsavedMovieDto.backdrop_path = localBanner;
+                
                 Movie createdMovie = movieDAO.createMovie(unsavedMovieDto);
                 if (createdMovie != null) {
                     createdMovie.setShowingFrom(showingFromPicker.getValue().toString());

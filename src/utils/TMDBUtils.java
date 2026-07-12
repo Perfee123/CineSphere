@@ -125,4 +125,29 @@ public class TMDBUtils {
         // size can be "w500", "original", etc.
         return "https://image.tmdb.org/t/p/" + size + path;
     }
+    
+    public static String downloadImageLocally(String path, String size, String prefix) {
+        if (path == null || path.isEmpty()) return null;
+        try {
+            String urlStr = getImageUrl(path, size);
+            java.net.URL url = new java.net.URL(urlStr);
+            
+            String fileName = prefix + "_" + path.replace("/", "");
+            java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/images");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            
+            java.io.File outputFile = new java.io.File(dir, fileName);
+            if (!outputFile.exists()) {
+                try (java.io.InputStream in = url.openStream()) {
+                    java.nio.file.Files.copy(in, outputFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+            return outputFile.toURI().toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

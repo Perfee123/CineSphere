@@ -51,50 +51,57 @@ public class NowShowingController {
         
         // Fetch movies asynchronously to not block UI
         new Thread(() -> {
-            models.MovieDAO dao = new models.MovieDAO();
-            List<models.Movie> dbMovies = dao.getActiveMovies();
-            allMovies = new java.util.ArrayList<>();
-            
-            for (models.Movie dbm : dbMovies) {
-                MovieDTO dto;
-                if (dbm.getTmdbId() > 0) {
-                    dto = TMDBUtils.getMovieDetails(dbm.getTmdbId());
-                    if (dto == null) {
-                        dto = new MovieDTO(); // Fallback
+            try {
+                models.MovieDAO dao = new models.MovieDAO();
+                List<models.Movie> dbMovies = dao.getActiveMovies();
+                allMovies = new java.util.ArrayList<>();
+                
+                for (models.Movie dbm : dbMovies) {
+                    MovieDTO dto;
+                    if (dbm.getTmdbId() > 0) {
+                        dto = TMDBUtils.getMovieDetails(dbm.getTmdbId());
+                        if (dto == null) {
+                            dto = new MovieDTO(); // Fallback
+                            dto.id = dbm.getTmdbId();
+                        }
+                    } else {
+                        dto = new MovieDTO();
+                        dto.id = dbm.getTmdbId(); // keep -1 or 0
                     }
-                } else {
-                    dto = new MovieDTO();
+                    
+                    // Override/Set properties based on local DB if missing
+                    if (dto.title == null) dto.title = dbm.getTitle();
+                    if (dto.overview == null) dto.overview = dbm.getDescription();
+                    if (dto.poster_path == null) dto.poster_path = dbm.getPosterPath();
+                    
+                    // If it's a local movie, set a generic genre for filtering
+                    if (dto.genres == null) {
+                        dto.genres = new java.util.ArrayList<>();
+                        MovieDTO.GenreDTO g = new MovieDTO.GenreDTO();
+                        g.name = dbm.getGenre();
+                        dto.genres.add(g);
+                    }
+                    
+                    allMovies.add(dto);
                 }
-                
-                // Override/Set properties based on local DB if missing
-                if (dto.title == null) dto.title = dbm.getTitle();
-                if (dto.overview == null) dto.overview = dbm.getDescription();
-                if (dto.poster_path == null) dto.poster_path = dbm.getPosterPath();
-                
-                // If it's a local movie, set a generic genre for filtering
-                if (dto.genres == null) {
-                    dto.genres = new java.util.ArrayList<>();
-                    MovieDTO.GenreDTO g = new MovieDTO.GenreDTO();
-                    g.name = dbm.getGenre();
-                    dto.genres.add(g);
-                }
-                
-                allMovies.add(dto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                Platform.runLater(this::filterMovies);
             }
-            
-            Platform.runLater(this::filterMovies);
         }).start();
     }
 
     private void filterMovies() {
         if (allMovies == null) return;
         
-        String searchQuery = searchField.getText().toLowerCase().trim();
+        String searchQuery = searchField.getText() == null ? "" : searchField.getText().toLowerCase().trim();
         String selectedGenre = genreFilterCombo.getValue();
         
         List<MovieDTO> filtered = allMovies.stream()
             .filter(m -> {
-                boolean matchesSearch = m.title.toLowerCase().contains(searchQuery);
+                String mTitle = m.title != null ? m.title.toLowerCase() : "";
+                boolean matchesSearch = mTitle.contains(searchQuery);
                 boolean matchesGenre = "All Genres".equals(selectedGenre) || hasGenre(m, selectedGenre);
                 return matchesSearch && matchesGenre;
             })
@@ -141,6 +148,7 @@ public class NowShowingController {
         VBox card = new VBox();
         card.getStyleClass().add("movie-grid-card");
         card.setPrefWidth(350);
+        card.setMinHeight(250);
         card.setSpacing(20);
         card.setPadding(new Insets(30));
 
@@ -150,7 +158,7 @@ public class NowShowingController {
         
         String genresStr = "GENRE";
         if (movie.genres != null && !movie.genres.isEmpty()) {
-            genresStr = movie.genres.stream().map(g -> g.name).limit(2).collect(Collectors.joining(", ")).toUpperCase();
+            genresStr = movie.genres.stream().map(g -> g.name != null ? g.name : "Unknown").limit(2).collect(Collectors.joining(", ")).toUpperCase();
         } else if (movie.genre_ids != null && !movie.genre_ids.isEmpty()) {
             genresStr = movie.genre_ids.stream().map(TMDBUtils::getGenreName).limit(2).collect(Collectors.joining(", ")).toUpperCase();
         }
@@ -183,21 +191,32 @@ public class NowShowingController {
         Button detailsBtn = new Button("View Details");
         detailsBtn.getStyleClass().add("search-btn");
         detailsBtn.setMaxWidth(Double.MAX_VALUE);
-        detailsBtn.setOnAction(e -> openMovieDetails(movie.id));
+        
+        models.Movie localMovieObj = getLocalMovieObj(movie.id, movie.title);
+        detailsBtn.setOnAction(e -> openMovieDetails(localMovieObj));
 
         card.getChildren().addAll(topRow, titleLabel, subtitleLabel, buttonSpacer, detailsBtn);
         return card;
     }
 
-    private void openMovieDetails(int movieId) {
+    private models.Movie getLocalMovieObj(int tmdbId, String title) {
+        models.MovieDAO dao = new models.MovieDAO();
+        for (models.Movie m : dao.getActiveMovies()) {
+            if (tmdbId > 0 && m.getTmdbId() == tmdbId) return m;
+            if (tmdbId == -1 && title.equals(m.getTitle())) return m;
+        }
+        return null;
+    }
+
+    private void openMovieDetails(models.Movie localMovie) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/ticket/MovieDetails.fxml"));
             Parent root = loader.load();
             
             MovieDetailsController controller = loader.getController();
-            controller.setMovieId(movieId);
+            controller.setLocalMovie(localMovie);
             
-            StackPane contentArea = (StackPane) moviesGrid.getScene().lookup("#contentArea");
+            StackPane contentArea = (StackPane) searchField.getScene().lookup("#contentArea");
             if (contentArea != null) {
                 contentArea.getChildren().clear();
                 contentArea.getChildren().add(root);

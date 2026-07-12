@@ -14,11 +14,17 @@ import models.MovieDAO;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 
+import javafx.scene.control.ComboBox;
+
 public class AddMovieManuallyController {
 
     @FXML private TextField titleField;
-    @FXML private TextField genreField;
+    @FXML private TextField taglineField;
+    @FXML private ComboBox<String> genreComboBox;
     @FXML private TextField durationField;
+    @FXML private TextField ratingField;
+    @FXML private TextField popularityField;
+    @FXML private TextField releaseDateField;
     @FXML private TextArea synopsisArea;
     
     @FXML private Label posterLabel;
@@ -33,6 +39,14 @@ public class AddMovieManuallyController {
     private String bannerPath = "";
 
     private MovieDAO movieDAO = new MovieDAO();
+    
+    @FXML
+    public void initialize() {
+        genreComboBox.getItems().addAll(
+            "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Thriller", "Documentary", "Animation", "Family"
+        );
+        genreComboBox.getSelectionModel().selectFirst();
+    }
 
     @FXML
     public void handleBack() {
@@ -72,13 +86,18 @@ public class AddMovieManuallyController {
     @FXML
     public void handleSave() {
         String title = titleField.getText().trim();
-        String genre = genreField.getText().trim();
+        String tagline = taglineField.getText().trim();
+        String genre = genreComboBox.getValue();
         String duration = durationField.getText().trim();
         String synopsis = synopsisArea.getText().trim();
+        String ratingStr = ratingField.getText().trim();
+        String popularityStr = popularityField.getText().trim();
+        String releaseDate = releaseDateField.getText().trim();
         String adultPriceStr = adultPriceField.getText().trim();
         String kidsPriceStr = kidsPriceField.getText().trim();
 
-        if (title.isEmpty() || genre.isEmpty() || duration.isEmpty() || synopsis.isEmpty() ||
+        if (title.isEmpty() || genre == null || duration.isEmpty() || synopsis.isEmpty() ||
+            ratingStr.isEmpty() || popularityStr.isEmpty() || releaseDate.isEmpty() ||
             adultPriceStr.isEmpty() || kidsPriceStr.isEmpty() || showingFromPicker.getValue() == null ||
             showingUntilPicker.getValue() == null || posterPath.isEmpty() || bannerPath.isEmpty()) {
             
@@ -91,14 +110,20 @@ public class AddMovieManuallyController {
             int durationInt = Integer.parseInt(duration);
             double adultPrice = Double.parseDouble(adultPriceStr);
             double kidsPrice = Double.parseDouble(kidsPriceStr);
+            double rating = Double.parseDouble(ratingStr);
+            double popularity = Double.parseDouble(popularityStr);
             
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String showingFrom = showingFromPicker.getValue().format(formatter);
-            String showingUntil = showingUntilPicker.getValue().format(formatter);
-            
-            Movie movie = new Movie("", title, genre, durationInt + " mins", synopsis, null);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String showingFrom = showingFromPicker.getValue().format(dtf);
+            String showingUntil = showingUntilPicker.getValue().format(dtf);
+
+            Movie movie = new Movie("-1", title, genre, durationInt + " mins", synopsis, null);
             movie.setPosterPath(posterPath);
             movie.setBannerPath(bannerPath);
+            movie.setRating(rating);
+            movie.setPopularity(popularity);
+            movie.setReleaseDate(releaseDate);
+            movie.setTagline(tagline);
             movie.setAdultPrice(adultPrice);
             movie.setKidsPrice(kidsPrice);
             movie.setShowingFrom(showingFrom);

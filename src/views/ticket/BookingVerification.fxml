@@ -3,7 +3,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.BookingVerificationController" stylesheets="@ticket.css" style="-fx-background-color: #ffffff; -fx-padding: 20;">
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" stylesheets="@ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.BookingVerificationController">
+<VBox spacing="15" style="-fx-background-color: #ffffff; -fx-padding: 20;">
     
     <Button text="← Back to Booking History" styleClass="secondary-action-btn" onAction="#handleBack" />
     
@@ -12,10 +13,10 @@
         <Label text="Validate customer check-in or manage cancellations." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
     </VBox>
 
-    <HBox spacing="60" VBox.vgrow="ALWAYS" alignment="TOP_LEFT">
+    <HBox spacing="60" VBox.vgrow="ALWAYS" alignment="TOP_LEFT" fillHeight="false">
         
         <!-- Left Panel: Ticket Card -->
-        <VBox alignment="CENTER" maxWidth="400" minWidth="400" maxHeight="-Infinity" styleClass="receipt-card" spacing="20">
+        <VBox alignment="CENTER" maxWidth="350" minWidth="350" maxHeight="-Infinity" styleClass="receipt-card" spacing="20">
             <padding>
                 <Insets top="40" right="30" bottom="40" left="30" />
             </padding>
@@ -36,8 +37,7 @@
             <Label fx:id="seatsLabel" text="Seats: E7, E8" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;" />
             <Label fx:id="totalPaidLabel" text="Total Paid: \$400.00" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #0d6efd;" />
             
-            <Region VBox.vgrow="ALWAYS" />
-            <Label fx:id="ticketBadgeLabel" text="CONFIRMED" styleClass="status-badge" style="-fx-font-size: 14px;" />
+            <Label fx:id="ticketBadgeLabel" text="CONFIRMED" styleClass="status-badge" style="-fx-font-size: 14px; -fx-translate-y: 20px;" />
         </VBox>
 
         <!-- Right Panel: Validation Info -->
@@ -68,3 +68,4 @@
         </VBox>
     </HBox>
 </VBox>
+</ScrollPane>

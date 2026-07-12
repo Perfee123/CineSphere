@@ -3,9 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import atlantafx.base.controls.RingProgressIndicator?>
 
 <ScrollPane fitToWidth="true" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ticket.MovieDetailsController" stylesheets="@ticket.css">
-    <VBox spacing="0" style="-fx-background-color: #ffffff;">
+    <StackPane>
+        <VBox fx:id="contentContainer" spacing="0" style="-fx-background-color: #ffffff;">
         
         <!-- Hero Banner Area -->
         <StackPane fx:id="heroBanner" minHeight="300" maxHeight="300">
@@ -41,7 +43,6 @@
                 <HBox spacing="10" alignment="CENTER_LEFT">
                     <Label fx:id="ratingLabel" text="⭐ 0.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
                     <Label text="/ 10" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
-                    <Label text="(TMDB)" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #ffc107;" />
                 </HBox>
 
                 <HBox spacing="15" alignment="CENTER_LEFT">
@@ -68,5 +69,15 @@
             <Label fx:id="overviewLabel" text="Loading synopsis..." wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #6c757d; -fx-line-spacing: 5px;" />
         </VBox>
 
-    </VBox>
+        </VBox>
+        
+        <!-- Loading Overlay -->
+        <VBox fx:id="loadingOverlay" alignment="CENTER" spacing="15" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="100" />
+            </padding>
+            <RingProgressIndicator progress="-1.0" />
+            <Label text="Please wait, loading movie details..." style="-fx-font-size: 16px; -fx-text-fill: #6c757d;" />
+        </VBox>
+    </StackPane>
 </ScrollPane>

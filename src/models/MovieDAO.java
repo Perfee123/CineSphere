@@ -37,6 +37,10 @@ public class MovieDAO {
                 movie.setShowingUntil(rs.getString("showing_until"));
                 movie.setAdultPrice(rs.getDouble("adult_price"));
                 movie.setKidsPrice(rs.getDouble("kids_price"));
+                movie.setRating(rs.getDouble("rating"));
+                movie.setPopularity(rs.getDouble("popularity"));
+                movie.setReleaseDate(rs.getString("release_date"));
+                movie.setTagline(rs.getString("tagline"));
                 
                 movies.add(movie);
             }
@@ -98,7 +102,7 @@ public class MovieDAO {
     }
 
     public Movie createMovie(MovieDTO dto) {
-        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, tmdb_id, poster_path, banner_path, status, adult_price, kids_price) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 0, 0)";
+        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, tmdb_id, poster_path, banner_path, rating, popularity, release_date, tagline, status, adult_price, kids_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 0, 0)";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             
@@ -117,16 +121,32 @@ public class MovieDAO {
             stmt.setInt(5, dto.id);
             stmt.setString(6, dto.poster_path);
             stmt.setString(7, dto.backdrop_path);
+            stmt.setDouble(8, dto.vote_average);
+            stmt.setDouble(9, dto.popularity);
+            stmt.setString(10, dto.release_date != null ? dto.release_date : "Unknown");
+            stmt.setString(11, dto.tagline != null ? dto.tagline : "");
             
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        int id = rs.getInt(1);
-                        Movie m = new Movie("M" + id, dto.title, genre, stmt.getParameterMetaData() != null ? "120 mins" : "120 mins", dto.overview, new ArrayList<>());
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int newId = generatedKeys.getInt(1);
+                        
+                        // Seed a dummy show so it appears in the booking UI
+                        try (PreparedStatement showStmt = conn.prepareStatement(
+                                "INSERT INTO shows (movie_id, hall_id, show_date, show_time, status) VALUES (?, 1, CURDATE(), '18:00:00', 'SCHEDULED')")) {
+                            showStmt.setInt(1, newId);
+                            showStmt.executeUpdate();
+                        }
+                        
+                        Movie m = new Movie("M" + newId, dto.title, genre, "120 mins", dto.overview, new ArrayList<>());
                         m.setTmdbId(dto.id);
                         m.setPosterPath(dto.poster_path);
                         m.setBannerPath(dto.backdrop_path);
+                        m.setRating(dto.vote_average);
+                        m.setPopularity(dto.popularity);
+                        m.setReleaseDate(dto.release_date);
+                        m.setTagline(dto.tagline);
                         return m;
                     }
                 }
@@ -138,9 +158,9 @@ public class MovieDAO {
     }
 
     public boolean addManualMovie(Movie movie) {
-        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, poster_path, banner_path, status, adult_price, kids_price, showing_from, showing_until) VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?)";
+        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, poster_path, banner_path, rating, popularity, release_date, tagline, status, adult_price, kids_price, showing_from, showing_until) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?)";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             
             stmt.setString(1, movie.getTitle());
             stmt.setString(2, movie.getDescription());
@@ -148,12 +168,29 @@ public class MovieDAO {
             stmt.setString(4, movie.getGenre());
             stmt.setString(5, movie.getPosterPath());
             stmt.setString(6, movie.getBannerPath());
-            stmt.setDouble(7, movie.getAdultPrice());
-            stmt.setDouble(8, movie.getKidsPrice());
-            stmt.setString(9, movie.getShowingFrom());
-            stmt.setString(10, movie.getShowingUntil());
+            stmt.setDouble(7, movie.getRating());
+            stmt.setDouble(8, movie.getPopularity());
+            stmt.setString(9, movie.getReleaseDate());
+            stmt.setString(10, movie.getTagline());
+            stmt.setDouble(11, movie.getAdultPrice());
+            stmt.setDouble(12, movie.getKidsPrice());
+            stmt.setString(13, movie.getShowingFrom());
+            stmt.setString(14, movie.getShowingUntil());
             
-            return stmt.executeUpdate() > 0;
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int newId = rs.getInt(1);
+                        try (PreparedStatement showStmt = conn.prepareStatement(
+                                "INSERT INTO shows (movie_id, hall_id, show_date, show_time, status) VALUES (?, 1, CURDATE(), '18:00:00', 'SCHEDULED')")) {
+                            showStmt.setInt(1, newId);
+                            showStmt.executeUpdate();
+                        }
+                    }
+                }
+                return true;
+            }
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
         }

@@ -37,12 +37,39 @@ public class MovieManagementController {
 
     private void loadMovies() {
         moviesListContainer.getChildren().clear();
-        List<Movie> movies = movieDAO.getActiveMovies();
-
-        for (Movie movie : movies) {
-            HBox row = createMovieRow(movie);
-            moviesListContainer.getChildren().add(row);
-        }
+        
+        atlantafx.base.controls.RingProgressIndicator loader = new atlantafx.base.controls.RingProgressIndicator();
+        loader.setProgress(-1); // Indeterminate
+        
+        javafx.scene.control.Label waitLbl = new javafx.scene.control.Label("Please wait, loading movies...");
+        waitLbl.setStyle("-fx-font-size: 16px; -fx-text-fill: #6c757d;");
+        
+        VBox loaderContainer = new VBox(15);
+        loaderContainer.getChildren().addAll(loader, waitLbl);
+        loaderContainer.setAlignment(Pos.CENTER);
+        loaderContainer.setPadding(new Insets(100, 0, 0, 0));
+        moviesListContainer.getChildren().add(loaderContainer);
+        
+        new Thread(() -> {
+            List<Movie> movies = movieDAO.getActiveMovies();
+            
+            javafx.application.Platform.runLater(() -> {
+                moviesListContainer.getChildren().clear();
+                
+                if (movies == null || movies.isEmpty()) {
+                    javafx.scene.control.Label noMoviesLabel = new javafx.scene.control.Label("No movies licensed yet.");
+                    noMoviesLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #6c757d; -fx-padding: 50;");
+                    moviesListContainer.setAlignment(Pos.CENTER);
+                    moviesListContainer.getChildren().add(noMoviesLabel);
+                } else {
+                    moviesListContainer.setAlignment(Pos.TOP_LEFT);
+                    for (Movie movie : movies) {
+                        HBox row = createMovieRow(movie);
+                        moviesListContainer.getChildren().add(row);
+                    }
+                }
+            });
+        }).start();
     }
 
     private HBox createMovieRow(Movie movie) {
@@ -67,14 +94,14 @@ public class MovieManagementController {
         poster.setFitHeight(75);
         poster.setPreserveRatio(true);
         if (movie.getPosterPath() != null && !movie.getPosterPath().isEmpty()) {
-            String posterUrl = movie.getPosterPath().startsWith("http") ? movie.getPosterPath() : TMDBUtils.getImageUrl(movie.getPosterPath(), "w500");
+            String posterUrl = (movie.getPosterPath().startsWith("http") || movie.getPosterPath().startsWith("file:")) ? movie.getPosterPath() : TMDBUtils.getImageUrl(movie.getPosterPath(), "w500");
             poster.setImage(new Image(posterUrl, true));
         } else if (movie.getTmdbId() > 0) {
             // Fetch poster asynchronously if not in local DB but has TMDB ID
             new Thread(() -> {
                 models.MovieDTO dto = TMDBUtils.getMovieDetails(movie.getTmdbId());
                 if (dto != null && dto.poster_path != null && !dto.poster_path.isEmpty()) {
-                    String posterUrl = dto.poster_path.startsWith("http") ? dto.poster_path : TMDBUtils.getImageUrl(dto.poster_path, "w500");
+                    String posterUrl = (dto.poster_path.startsWith("http") || dto.poster_path.startsWith("file:")) ? dto.poster_path : TMDBUtils.getImageUrl(dto.poster_path, "w500");
                     javafx.application.Platform.runLater(() -> poster.setImage(new Image(posterUrl, true)));
                     
                     // Optional: update the local database so we don't have to fetch next time
