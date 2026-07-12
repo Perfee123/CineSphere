@@ -1,8 +1,7 @@
 -- CineSphere Database Setup Script
 -- Run this entire script in MySQL Workbench to set up or reset the CineSphere database.
 
-DROP DATABASE IF EXISTS cinesphere;
-CREATE DATABASE cinesphere;
+CREATE DATABASE IF NOT EXISTS cinesphere;
 USE cinesphere;
 
 -- 1. Users Table
@@ -39,6 +38,13 @@ CREATE TABLE IF NOT EXISTS movies (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+ALTER TABLE movies 
+    ADD COLUMN tagline VARCHAR(255),
+    ADD COLUMN poster_path VARCHAR(500),
+    ADD COLUMN banner_path VARCHAR(500),
+    ADD COLUMN rating DECIMAL(3,1) DEFAULT 0.0,
+    ADD COLUMN popularity DOUBLE DEFAULT 0.0;
 
 -- 3. Halls Table
 CREATE TABLE IF NOT EXISTS halls (

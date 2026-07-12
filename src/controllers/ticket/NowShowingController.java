@@ -24,6 +24,7 @@ public class NowShowingController {
     @FXML private FlowPane moviesGrid;
 
     private List<MovieDTO> allMovies;
+    private List<models.Movie> dbMoviesList;
 
     @FXML
     public void initialize() {
@@ -54,6 +55,7 @@ public class NowShowingController {
             try {
                 models.MovieDAO dao = new models.MovieDAO();
                 List<models.Movie> dbMovies = dao.getActiveMovies();
+                dbMoviesList = dbMovies;
                 allMovies = new java.util.ArrayList<>();
                 
                 for (models.Movie dbm : dbMovies) {
@@ -200,10 +202,10 @@ public class NowShowingController {
     }
 
     private models.Movie getLocalMovieObj(int tmdbId, String title) {
-        models.MovieDAO dao = new models.MovieDAO();
-        for (models.Movie m : dao.getActiveMovies()) {
+        if (dbMoviesList == null) return null;
+        for (models.Movie m : dbMoviesList) {
             if (tmdbId > 0 && m.getTmdbId() == tmdbId) return m;
-            if (tmdbId == -1 && title.equals(m.getTitle())) return m;
+            if (tmdbId <= 0 && title != null && title.equals(m.getTitle())) return m;
         }
         return null;
     }

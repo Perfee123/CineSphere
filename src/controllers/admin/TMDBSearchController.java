@@ -76,6 +76,7 @@ public class TMDBSearchController {
                 if (results.isEmpty()) {
                     statusLabel.setText("No results found for '" + query + "'.");
                 } else {
+                    statusLabel.setText("Found " + results.size() + " result(s) for '" + query + "'.");
                     for (MovieDTO movie : results) {
                         resultsContainer.getChildren().add(createResultCard(movie));
                     }

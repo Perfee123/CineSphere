@@ -83,13 +83,21 @@ public class MovieDetailsController {
         if (isAddNewMode && movie.getTmdbId() > 0) {
             this.currentMovieId = movie.getTmdbId();
             new Thread(() -> {
-                MovieDTO dto = TMDBUtils.getMovieDetails(currentMovieId);
-                this.currentFetchedDto = dto;
-                Platform.runLater(() -> {
-                    populateDetails(dto);
-                    updateActionButtons();
-                    hideLoader();
-                });
+                try {
+                    MovieDTO dto = TMDBUtils.getMovieDetails(currentMovieId);
+                    this.currentFetchedDto = dto;
+                    Platform.runLater(() -> {
+                        try {
+                            populateDetails(dto);
+                            updateActionButtons();
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(this::hideLoader);
+                }
             }).start();
         } else {
             try {
@@ -147,13 +155,21 @@ public class MovieDetailsController {
         }
         
         new Thread(() -> {
-            MovieDTO dto = TMDBUtils.getMovieDetails(tmdbId);
-            this.currentFetchedDto = dto;
-            Platform.runLater(() -> {
-                populateDetails(dto);
-                updateActionButtons();
-                hideLoader();
-            });
+            try {
+                MovieDTO dto = TMDBUtils.getMovieDetails(tmdbId);
+                this.currentFetchedDto = dto;
+                Platform.runLater(() -> {
+                    try {
+                        populateDetails(dto);
+                        updateActionButtons();
+                    } finally {
+                        hideLoader();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(this::hideLoader);
+            }
         }).start();
     }
 

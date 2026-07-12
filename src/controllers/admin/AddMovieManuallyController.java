@@ -112,10 +112,55 @@ public class AddMovieManuallyController {
             double kidsPrice = Double.parseDouble(kidsPriceStr);
             double rating = Double.parseDouble(ratingStr);
             double popularity = Double.parseDouble(popularityStr);
+
+            if (durationInt < 0 || adultPrice < 0 || kidsPrice < 0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Duration and prices cannot be negative.");
+                alert.showAndWait();
+                return;
+            }
+            if (rating < 0.0 || rating > 10.0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Rating must be between 0.0 and 10.0.");
+                alert.showAndWait();
+                return;
+            }
             
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            if (showingUntilPicker.getValue().isBefore(showingFromPicker.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Showing Until date cannot be before Showing From date.");
+                alert.showAndWait();
+                return;
+            }
             String showingFrom = showingFromPicker.getValue().format(dtf);
             String showingUntil = showingUntilPicker.getValue().format(dtf);
+
+            try {
+                java.time.LocalDate.parse(releaseDate, dtf);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Release Date must be in YYYY-MM-DD format.");
+                alert.showAndWait();
+                return;
+            }
+            
+            // Copy files locally
+            try {
+                java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/images");
+                if (!dir.exists()) dir.mkdirs();
+                
+                if (posterPath.startsWith("file:/")) {
+                    java.io.File src = new java.io.File(java.net.URI.create(posterPath));
+                    java.io.File dest = new java.io.File(dir, "manual_poster_" + System.currentTimeMillis() + "_" + src.getName());
+                    java.nio.file.Files.copy(src.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    posterPath = dest.toURI().toString();
+                }
+                if (bannerPath.startsWith("file:/")) {
+                    java.io.File src = new java.io.File(java.net.URI.create(bannerPath));
+                    java.io.File dest = new java.io.File(dir, "manual_banner_" + System.currentTimeMillis() + "_" + src.getName());
+                    java.nio.file.Files.copy(src.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    bannerPath = dest.toURI().toString();
+                }
+            } catch (java.io.IOException ex) {
+                ex.printStackTrace();
+            }
 
             Movie movie = new Movie("-1", title, genre, durationInt + " mins", synopsis, null);
             movie.setPosterPath(posterPath);

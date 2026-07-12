@@ -51,24 +51,34 @@ public class MovieManagementController {
         moviesListContainer.getChildren().add(loaderContainer);
         
         new Thread(() -> {
-            List<Movie> movies = movieDAO.getActiveMovies();
-            
-            javafx.application.Platform.runLater(() -> {
-                moviesListContainer.getChildren().clear();
+            try {
+                List<Movie> movies = movieDAO.getActiveMovies();
                 
-                if (movies == null || movies.isEmpty()) {
-                    javafx.scene.control.Label noMoviesLabel = new javafx.scene.control.Label("No movies licensed yet.");
-                    noMoviesLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #6c757d; -fx-padding: 50;");
-                    moviesListContainer.setAlignment(Pos.CENTER);
-                    moviesListContainer.getChildren().add(noMoviesLabel);
-                } else {
-                    moviesListContainer.setAlignment(Pos.TOP_LEFT);
-                    for (Movie movie : movies) {
-                        HBox row = createMovieRow(movie);
-                        moviesListContainer.getChildren().add(row);
+                javafx.application.Platform.runLater(() -> {
+                    moviesListContainer.getChildren().clear();
+                    
+                    if (movies == null || movies.isEmpty()) {
+                        javafx.scene.control.Label noMoviesLabel = new javafx.scene.control.Label("No movies licensed yet.");
+                        noMoviesLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #6c757d; -fx-padding: 50;");
+                        moviesListContainer.setAlignment(Pos.CENTER);
+                        moviesListContainer.getChildren().add(noMoviesLabel);
+                    } else {
+                        moviesListContainer.setAlignment(Pos.TOP_LEFT);
+                        for (Movie movie : movies) {
+                            HBox row = createMovieRow(movie);
+                            moviesListContainer.getChildren().add(row);
+                        }
                     }
-                }
-            });
+                });
+            } catch (Exception ex) {
+                javafx.application.Platform.runLater(() -> {
+                    moviesListContainer.getChildren().clear();
+                    javafx.scene.control.Label errorLabel = new javafx.scene.control.Label("Error loading movies. Please try again.");
+                    errorLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #dc3545; -fx-padding: 50;");
+                    moviesListContainer.setAlignment(Pos.CENTER);
+                    moviesListContainer.getChildren().add(errorLabel);
+                });
+            }
         }).start();
     }
 

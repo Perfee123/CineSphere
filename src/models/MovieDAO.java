@@ -46,6 +46,7 @@ public class MovieDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
         }
         return movies;
     }
@@ -123,7 +124,13 @@ public class MovieDAO {
             stmt.setString(7, dto.backdrop_path);
             stmt.setDouble(8, dto.vote_average);
             stmt.setDouble(9, dto.popularity);
-            stmt.setString(10, dto.release_date != null ? dto.release_date : "Unknown");
+            
+            if (dto.release_date != null && !dto.release_date.trim().isEmpty()) {
+                stmt.setDate(10, java.sql.Date.valueOf(dto.release_date));
+            } else {
+                stmt.setNull(10, java.sql.Types.DATE);
+            }
+            
             stmt.setString(11, dto.tagline != null ? dto.tagline : "");
             
             int affectedRows = stmt.executeUpdate();
@@ -132,14 +139,8 @@ public class MovieDAO {
                     if (generatedKeys.next()) {
                         int newId = generatedKeys.getInt(1);
                         
-                        // Seed a dummy show so it appears in the booking UI
-                        try (PreparedStatement showStmt = conn.prepareStatement(
-                                "INSERT INTO shows (movie_id, hall_id, show_date, show_time, status) VALUES (?, 1, CURDATE(), '18:00:00', 'SCHEDULED')")) {
-                            showStmt.setInt(1, newId);
-                            showStmt.executeUpdate();
-                        }
-                        
-                        Movie m = new Movie("M" + newId, dto.title, genre, "120 mins", dto.overview, new ArrayList<>());
+                        int runtimeToSave = dto.runtime > 0 ? dto.runtime : 120;
+                        Movie m = new Movie("M" + newId, dto.title, genre, runtimeToSave + " mins", dto.overview, new ArrayList<>());
                         m.setTmdbId(dto.id);
                         m.setPosterPath(dto.poster_path);
                         m.setBannerPath(dto.backdrop_path);
@@ -179,16 +180,6 @@ public class MovieDAO {
             
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                try (ResultSet rs = stmt.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        int newId = rs.getInt(1);
-                        try (PreparedStatement showStmt = conn.prepareStatement(
-                                "INSERT INTO shows (movie_id, hall_id, show_date, show_time, status) VALUES (?, 1, CURDATE(), '18:00:00', 'SCHEDULED')")) {
-                            showStmt.setInt(1, newId);
-                            showStmt.executeUpdate();
-                        }
-                    }
-                }
                 return true;
             }
         } catch (SQLException | NumberFormatException e) {

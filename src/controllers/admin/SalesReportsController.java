@@ -130,9 +130,6 @@ public class SalesReportsController {
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 String title = rs.getString("title");
-                if (title.length() > 15) {
-                    title = title.substring(0, 15) + "...";
-                }
                 series.getData().add(new XYChart.Data<>(title, rs.getDouble("revenue")));
             }
         }
@@ -211,6 +208,17 @@ public class SalesReportsController {
         }
     }
 
+    private String escapeCsv(String value) {
+        if (value == null) return "";
+        if (value.startsWith("=") || value.startsWith("+") || value.startsWith("-") || value.startsWith("@")) {
+            value = "'" + value;
+        }
+        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+            value = "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
+
     private void generateReportForTimeframe(String timeframe) {
         javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
         fileChooser.setTitle("Save Sales Report");
@@ -238,33 +246,47 @@ public class SalesReportsController {
                          "WHERE " + timeFilterSql + " " +
                          "ORDER BY b.booking_time DESC";
 
-            try (Connection conn = DBUtils.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery();
-                 java.io.PrintWriter writer = new java.io.PrintWriter(file)) {
-                 
-                writer.println("Booking ID,Date & Time,Movie Title,Adults,Kids,Sold By,Status,Total Amount");
-                while (rs.next()) {
-                    writer.printf("BK-%d,%s,%s,%d,%d,%s,%s,%.2f%n",
-                        rs.getInt("id"),
-                        rs.getString("booking_time"),
-                        rs.getString("movie_title").replace(",", " "), 
-                        rs.getInt("adult_count"),
-                        rs.getInt("kids_count"),
-                        rs.getString("sold_by"),
-                        rs.getString("status"),
-                        rs.getDouble("total_amount")
-                    );
+            new Thread(() -> {
+                try (Connection conn = DBUtils.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(sql);
+                     ResultSet rs = stmt.executeQuery();
+                     java.io.PrintWriter writer = new java.io.PrintWriter(file)) {
+                     
+                    writer.println("Booking ID,Date & Time,Movie Title,Adults,Kids,Sold By,Status,Total Amount");
+                    while (rs.next()) {
+                        String title = rs.getString("movie_title");
+                        String soldBy = rs.getString("sold_by");
+                        writer.printf("%s,%s,%s,%d,%d,%s,%s,%.2f%n",
+                            escapeCsv("BK-" + rs.getInt("id")),
+                            escapeCsv(rs.getString("booking_time")),
+                            escapeCsv(title),
+                            rs.getInt("adult_count"),
+                            rs.getInt("kids_count"),
+                            escapeCsv(soldBy),
+                            escapeCsv(rs.getString("status")),
+                            rs.getDouble("total_amount")
+                        );
+                    }
+                    
+                    boolean error = writer.checkError();
+                    
+                    javafx.application.Platform.runLater(() -> {
+                        if (error) {
+                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Failed to write all data to report.");
+                            alert.showAndWait();
+                        } else {
+                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Report generated successfully!");
+                            alert.showAndWait();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    javafx.application.Platform.runLater(() -> {
+                        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Failed to generate report.");
+                        alert.showAndWait();
+                    });
                 }
-                
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Report generated successfully!");
-                alert.showAndWait();
-                
-            } catch (SQLException | java.io.IOException e) {
-                e.printStackTrace();
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Failed to generate report.");
-                alert.showAndWait();
-            }
+            }).start();
         }
     }
 }

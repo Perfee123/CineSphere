@@ -139,12 +139,23 @@ public class TMDBUtils {
             }
             
             java.io.File outputFile = new java.io.File(dir, fileName);
-            if (!outputFile.exists()) {
-                try (java.io.InputStream in = url.openStream()) {
-                    java.nio.file.Files.copy(in, outputFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            java.io.File tempFile = java.io.File.createTempFile(fileName, ".tmp", dir);
+            
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(10000);
+            conn.setRequestMethod("GET");
+            
+            if (conn.getResponseCode() == 200) {
+                try (java.io.InputStream in = conn.getInputStream()) {
+                    java.nio.file.Files.copy(in, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 }
+                java.nio.file.Files.move(tempFile.toPath(), outputFile.toPath(), java.nio.file.StandardCopyOption.ATOMIC_MOVE, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                return outputFile.toURI().toString();
+            } else {
+                tempFile.delete();
+                return null;
             }
-            return outputFile.toURI().toString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -74,28 +74,31 @@ public class EditMoviePricingDialogController {
             
             if (unsavedMovieDto != null) {
                 // We are adding a new TMDB movie
-                // Download images locally
-                String localPoster = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.poster_path, "w500", "poster");
-                String localBanner = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.backdrop_path, "original", "banner");
-                
-                if (localPoster != null) unsavedMovieDto.poster_path = localPoster;
-                if (localBanner != null) unsavedMovieDto.backdrop_path = localBanner;
-                
-                Movie createdMovie = movieDAO.createMovie(unsavedMovieDto);
-                if (createdMovie != null) {
-                    createdMovie.setShowingFrom(showingFromPicker.getValue().toString());
-                    createdMovie.setShowingUntil(showingUntilPicker.getValue().toString());
-                    createdMovie.setAdultPrice(adultP);
-                    createdMovie.setKidsPrice(kidsP);
-                    if (movieDAO.updateMoviePricing(createdMovie)) {
-                        this.saveSuccessful = true;
-                        Stage stage = (Stage) adultPriceField.getScene().getWindow();
-                        stage.close();
-                    }
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to add movie to database.");
-                    alert.showAndWait();
-                }
+                new Thread(() -> {
+                    String localPoster = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.poster_path, "w500", "poster");
+                    String localBanner = utils.TMDBUtils.downloadImageLocally(unsavedMovieDto.backdrop_path, "original", "banner");
+                    
+                    if (localPoster != null) unsavedMovieDto.poster_path = localPoster;
+                    if (localBanner != null) unsavedMovieDto.backdrop_path = localBanner;
+                    
+                    javafx.application.Platform.runLater(() -> {
+                        Movie createdMovie = movieDAO.createMovie(unsavedMovieDto);
+                        if (createdMovie != null) {
+                            createdMovie.setShowingFrom(showingFromPicker.getValue().toString());
+                            createdMovie.setShowingUntil(showingUntilPicker.getValue().toString());
+                            createdMovie.setAdultPrice(adultP);
+                            createdMovie.setKidsPrice(kidsP);
+                            if (movieDAO.updateMoviePricing(createdMovie)) {
+                                this.saveSuccessful = true;
+                                Stage stage = (Stage) adultPriceField.getScene().getWindow();
+                                stage.close();
+                            }
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to add movie to database.");
+                            alert.showAndWait();
+                        }
+                    });
+                }).start();
             } else {
                 // Updating an existing movie
                 movie.setShowingFrom(showingFromPicker.getValue().toString());
