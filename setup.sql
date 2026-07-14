@@ -39,13 +39,6 @@ CREATE TABLE IF NOT EXISTS movies (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-ALTER TABLE movies 
-    ADD COLUMN tagline VARCHAR(255),
-    ADD COLUMN poster_path VARCHAR(500),
-    ADD COLUMN banner_path VARCHAR(500),
-    ADD COLUMN rating DECIMAL(3,1) DEFAULT 0.0,
-    ADD COLUMN popularity DOUBLE DEFAULT 0.0;
-
 -- 3. Halls Table
 CREATE TABLE IF NOT EXISTS halls (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -120,7 +113,7 @@ BEGIN
         SET row_char = CHAR(65 + r);
         SET c = 1;
         WHILE c <= p_cols DO
-            INSERT INTO seats (hall_id, row_label, seat_number, seat_type)
+            INSERT IGNORE INTO seats (hall_id, row_label, seat_number, seat_type)
             VALUES (p_hall_id, row_char, c, 'REGULAR');
             SET c = c + 1;
         END WHILE;
@@ -130,12 +123,12 @@ END //
 DELIMITER ;
 
 -- 9. Seed Data: Users
-INSERT INTO users (username, password, full_name, role) VALUES
+INSERT IGNORE INTO users (username, password, full_name, role) VALUES
 ('admin', '123', 'System Administrator', 'ADMIN'),
 ('ticket', '123', 'Counter Staff', 'TICKET_STAFF');
 
 -- 10. Seed Data: Halls
-INSERT INTO halls (name, total_seats, seat_rows, seat_columns) VALUES
+INSERT IGNORE INTO halls (name, total_seats, seat_rows, seat_columns) VALUES
 ('Hall A', 80, 8, 10),
 ('Hall B', 60, 6, 10),
 ('Hall C', 100, 10, 10);
@@ -144,4 +137,21 @@ INSERT INTO halls (name, total_seats, seat_rows, seat_columns) VALUES
 CALL generate_hall_seats(1, 8, 10);
 CALL generate_hall_seats(2, 6, 10);
 CALL generate_hall_seats(3, 10, 10);
+
+-- 12. Trigger: Auto-Schedule Movies (Temporary until Manager Role is added)
+DROP TRIGGER IF EXISTS after_movie_insert;
+DELIMITER //
+CREATE TRIGGER after_movie_insert
+AFTER INSERT ON movies
+FOR EACH ROW
+BEGIN
+    -- Assign to Hall A (ID 1) at 11:00 AM today
+    INSERT INTO shows (movie_id, hall_id, show_date, show_time, status)
+    VALUES (NEW.id, 1, CURDATE(), '11:00:00', 'SCHEDULED');
+    
+    -- Assign to Hall B (ID 2) at 6:00 PM today
+    INSERT INTO shows (movie_id, hall_id, show_date, show_time, status)
+    VALUES (NEW.id, 2, CURDATE(), '18:00:00', 'SCHEDULED');
+END //
+DELIMITER ;
 

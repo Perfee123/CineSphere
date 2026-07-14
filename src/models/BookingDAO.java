@@ -80,6 +80,25 @@ public class BookingDAO {
         return false;
     }
 
+    public int[] getHallDimensions(String showId) {
+        int[] dims = new int[]{8, 10}; // defaults
+        int sId = Integer.parseInt(showId.replace("SH-", ""));
+        String sql = "SELECT h.seat_rows, h.seat_columns FROM shows s JOIN halls h ON s.hall_id = h.id WHERE s.id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, sId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    dims[0] = rs.getInt("seat_rows");
+                    dims[1] = rs.getInt("seat_columns");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dims;
+    }
+
     public List<String> getBookedSeats(String showId) {
         List<String> bookedSeats = new ArrayList<>();
         int sId = Integer.parseInt(showId.replace("SH-", ""));

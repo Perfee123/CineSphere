@@ -51,13 +51,13 @@ public class SeatSelectionController {
     }
 
     private void generateSeatGrid() {
-        int rows = 8;
-        int cols = 10;
-        
         models.BookingDAO dao = new models.BookingDAO();
+        int[] dims = dao.getHallDimensions(showId);
+        int rows = dims[0];
+        int cols = dims[1];
+        
         List<String> mockBooked = dao.getBookedSeats(showId);
         List<String> mockMaintenance = new ArrayList<>(); // TODO: Load maintenance from DB if needed
-
         
         buildSeatGrid(rows, cols, mockBooked, mockMaintenance);
     }

@@ -62,3 +62,5 @@ built.bat
 # Add these lines to .gitignore
 lib/*.dll
 lib/*.jar
+
+data/
