@@ -40,6 +40,12 @@ public class MovieDetailsController {
     private Label popularityLabel;
     @FXML
     private Label overviewLabel;
+    
+    @FXML
+    private javafx.scene.layout.VBox loadingOverlay;
+    
+    @FXML
+    private javafx.scene.layout.VBox contentContainer;
 
     private boolean isAdminMode = false;
     private boolean isAddNewMode = false;
@@ -68,43 +74,102 @@ public class MovieDetailsController {
 
     public void setLocalMovie(Movie movie) {
         this.localMovie = movie;
-        if (movie.getTmdbId() > 0) {
+        
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisible(true);
+            contentContainer.setVisible(false);
+        }
+        
+        if (isAddNewMode && movie.getTmdbId() > 0) {
             this.currentMovieId = movie.getTmdbId();
             new Thread(() -> {
-                MovieDTO dto = TMDBUtils.getMovieDetails(currentMovieId);
-                this.currentFetchedDto = dto;
-                Platform.runLater(() -> {
-                    populateDetails(dto);
-                    updateActionButtons();
-                });
+                try {
+                    MovieDTO dto = TMDBUtils.getMovieDetails(currentMovieId);
+                    this.currentFetchedDto = dto;
+                    Platform.runLater(() -> {
+                        try {
+                            populateDetails(dto);
+                            updateActionButtons();
+                        } finally {
+                            hideLoader();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(this::hideLoader);
+                }
             }).start();
         } else {
-            // Populate from local DB
-            titleLabel.setText(movie.getTitle());
-            overviewLabel.setText(movie.getDescription());
-            durationLabel.setText("⏱ " + movie.getRuntime());
+            try {
+                // Populate from local DB (already licensed or manually added)
+                titleLabel.setText(movie.getTitle());
+                overviewLabel.setText(movie.getDescription());
+                durationLabel.setText("⏱ " + movie.getRuntime());
+                
+                // Local DB has single genre string, put in a label like TMDB does
+                genresBox.getChildren().clear();
+                if (movie.getGenre() != null && !movie.getGenre().isEmpty()) {
+                    Label gLbl = new Label(movie.getGenre());
+                    gLbl.setStyle("-fx-border-color: #0d6efd; -fx-text-fill: #0d6efd; -fx-border-radius: 15px; -fx-padding: 5 15;");
+                    genresBox.getChildren().add(gLbl);
+                }
+                
+                ratingLabel.setText(movie.getRating() > 0 ? "⭐ " + String.format("%.1f", movie.getRating()) : "⭐ N/A");
+                yearLabel.setText(movie.getReleaseDate() != null ? movie.getReleaseDate() : "Unknown Year");
+                taglineLabel.setText(movie.getTagline() != null && !movie.getTagline().isEmpty() ? "\"" + movie.getTagline() + "\"" : "");
+                languageLabel.setText("🌐 EN"); // Default
+                popularityLabel.setText("🔥 Popularity: " + String.format("%.1f", movie.getPopularity()));
+                
+                if (movie.getPosterPath() != null && !movie.getPosterPath().isEmpty()) {
+                    String posterUrl = (movie.getPosterPath().startsWith("http") || movie.getPosterPath().startsWith("file:")) ? movie.getPosterPath() : TMDBUtils.getImageUrl(movie.getPosterPath(), "w500");
+                    posterImage.setImage(new Image(posterUrl, true));
+                }
+                if (movie.getBannerPath() != null && !movie.getBannerPath().isEmpty()) {
+                    String bannerUrl = (movie.getBannerPath().startsWith("http") || movie.getBannerPath().startsWith("file:")) ? movie.getBannerPath() : TMDBUtils.getImageUrl(movie.getBannerPath(), "original");
+                    heroBanner.setStyle("-fx-background-image: url('" + bannerUrl + "'); -fx-background-size: cover; -fx-background-position: center;");
+                }
+                updateActionButtons();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("Error in setLocalMovie else block: " + e.getMessage());
+            } finally {
+                hideLoader();
+            }
+        }
+    }
 
-            if (movie.getPosterPath() != null && !movie.getPosterPath().isEmpty()) {
-                String posterUrl = movie.getPosterPath().startsWith("http") ? movie.getPosterPath() : TMDBUtils.getImageUrl(movie.getPosterPath(), "w500");
-                posterImage.setImage(new Image(posterUrl, true));
-            }
-            if (movie.getBannerPath() != null && !movie.getBannerPath().isEmpty()) {
-                String bannerUrl = movie.getBannerPath().startsWith("http") ? movie.getBannerPath() : TMDBUtils.getImageUrl(movie.getBannerPath(), "original");
-                heroBanner.setStyle("-fx-background-image: url('" + bannerUrl + "'); -fx-background-size: cover; -fx-background-position: center;");
-            }
-            updateActionButtons();
+    private void hideLoader() {
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisible(false);
+            loadingOverlay.setManaged(false);
+            contentContainer.setVisible(true);
         }
     }
 
     public void setMovieId(int tmdbId) {
         this.currentMovieId = tmdbId;
+        
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisible(true);
+            contentContainer.setVisible(false);
+        }
+        
         new Thread(() -> {
-            MovieDTO dto = TMDBUtils.getMovieDetails(tmdbId);
-            this.currentFetchedDto = dto;
-            Platform.runLater(() -> {
-                populateDetails(dto);
-                updateActionButtons();
-            });
+            try {
+                MovieDTO dto = TMDBUtils.getMovieDetails(tmdbId);
+                this.currentFetchedDto = dto;
+                Platform.runLater(() -> {
+                    try {
+                        populateDetails(dto);
+                        updateActionButtons();
+                    } finally {
+                        hideLoader();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(this::hideLoader);
+            }
         }).start();
     }
 

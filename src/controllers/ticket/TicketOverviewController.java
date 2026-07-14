@@ -18,7 +18,6 @@ public class TicketOverviewController {
 
     @FXML private TextField searchField;
     @FXML private TableView<ShowTableItem> showsTable;
-    @FXML private TableColumn<ShowTableItem, String> colInfo;
     @FXML private TableColumn<ShowTableItem, String> colShowId;
     @FXML private TableColumn<ShowTableItem, String> colMovieTitle;
     @FXML private TableColumn<ShowTableItem, String> colHall;
@@ -55,36 +54,6 @@ public class TicketOverviewController {
                     } else if ("Fully Booked".equalsIgnoreCase(item.getStatus())) {
                         getStyleClass().add("table-row-booked");
                     }
-                }
-            }
-        });
-
-        // Setup Info button cell
-        colInfo.setCellFactory(tc -> new TableCell<ShowTableItem, String>() {
-            private final Button btn = new Button();
-
-            {
-                SVGPath infoIcon = new SVGPath();
-                infoIcon.setContent("M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,15H11V11h2Zm0-8H11V7h2Z");
-                infoIcon.setFill(Color.web("#0d6efd"));
-                
-                btn.setGraphic(infoIcon);
-                btn.getStyleClass().add("info-btn");
-                btn.setOnAction(e -> {
-                    ShowTableItem item = getTableView().getItems().get(getIndex());
-                    showMovieInfoDialog(item);
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    HBox box = new HBox(btn);
-                    box.setAlignment(javafx.geometry.Pos.CENTER);
-                    setGraphic(box);
                 }
             }
         });
@@ -130,56 +99,7 @@ public class TicketOverviewController {
         showsTable.setItems(filteredData);
     }
 
-    private void showMovieInfoDialog(ShowTableItem item) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Movie Info");
-        dialog.setHeaderText("Details for: " + item.getMovieTitle());
-        
-        DialogPane dialogPane = dialog.getDialogPane();
-        dialogPane.getButtonTypes().addAll(ButtonType.OK);
-        
-        HBox content = new HBox(20);
-        
-        String posterUrl = null;
-        try (java.sql.Connection conn = utils.DBUtils.getConnection();
-             java.sql.PreparedStatement stmt = conn.prepareStatement("SELECT poster_path, tmdb_id FROM movies WHERE title = ? LIMIT 1")) {
-             stmt.setString(1, item.getMovieTitle());
-             try (java.sql.ResultSet rs = stmt.executeQuery()) {
-                 if (rs.next()) {
-                     int tmdbId = rs.getInt("tmdb_id");
-                     if (!rs.wasNull() && tmdbId > 0) {
-                         models.MovieDTO dto = utils.TMDBUtils.getMovieDetails(tmdbId);
-                         if (dto != null && dto.poster_path != null) {
-                             posterUrl = utils.TMDBUtils.getImageUrl(dto.poster_path, "w500");
-                         }
-                     } else {
-                         posterUrl = rs.getString("poster_path");
-                     }
-                 }
-             }
-        } catch(Exception ex) {}
-        
-        javafx.scene.image.ImageView imgView = new javafx.scene.image.ImageView();
-        if (posterUrl != null && !posterUrl.isEmpty()) {
-            try {
-                if(!posterUrl.startsWith("http")) posterUrl = "file:" + posterUrl; // handle local
-                imgView.setImage(new javafx.scene.image.Image(posterUrl, 150, 225, true, true));
-            } catch (Exception e) {}
-        }
-        
-        javafx.scene.layout.VBox textContent = new javafx.scene.layout.VBox(10);
-        textContent.getChildren().addAll(
-            new Label("Show ID: " + item.getShowId()),
-            new Label("Hall: " + item.getHall()),
-            new Label("Time: " + item.getTime()),
-            new Label("Seats Booked: " + item.getSeats()),
-            new Label("Status: " + item.getStatus())
-        );
-        
-        content.getChildren().addAll(imgView, textContent);
-        dialogPane.setContent(content);
-        dialog.showAndWait();
-    }
+
 
     @FXML
     public void handleNewBooking() {

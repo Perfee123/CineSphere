@@ -76,7 +76,7 @@ public class TMDBSearchController {
                 if (results.isEmpty()) {
                     statusLabel.setText("No results found for '" + query + "'.");
                 } else {
-                    statusLabel.setText("Found " + results.size() + " result(s) — click a movie to view details.");
+                    statusLabel.setText("Found " + results.size() + " result(s) for '" + query + "'.");
                     for (MovieDTO movie : results) {
                         resultsContainer.getChildren().add(createResultCard(movie));
                     }
@@ -88,12 +88,12 @@ public class TMDBSearchController {
     private VBox createResultCard(MovieDTO movie) {
         VBox card = new VBox(10);
         card.setAlignment(Pos.TOP_CENTER);
-        card.setPadding(new Insets(15));
-        card.setStyle("-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-pref-width: 200px; -fx-pref-height: 350px;");
+        card.setPadding(new Insets(10));
+        card.setStyle("-fx-background-color: white; -fx-border-color: transparent; -fx-background-radius: 15px; -fx-pref-width: 170px; -fx-pref-height: 310px;");
         card.setCursor(Cursor.HAND);
 
-        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: white; -fx-border-color: #0066ff; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-pref-width: 200px; -fx-pref-height: 350px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 5);"));
-        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: white; -fx-border-color: #eeeeee; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-pref-width: 200px; -fx-pref-height: 350px;"));
+        card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #f1f3f5; -fx-border-color: transparent; -fx-background-radius: 15px; -fx-pref-width: 170px; -fx-pref-height: 310px;"));
+        card.setOnMouseExited(e -> card.setStyle("-fx-background-color: white; -fx-border-color: transparent; -fx-background-radius: 15px; -fx-pref-width: 170px; -fx-pref-height: 310px;"));
 
         card.setOnMouseClicked(e -> openMovieDetailsAddMode(movie));
 
@@ -101,7 +101,14 @@ public class TMDBSearchController {
         ImageView poster = new ImageView();
         poster.setFitWidth(150);
         poster.setFitHeight(225);
-        poster.setPreserveRatio(true);
+        poster.setPreserveRatio(false); // ensures the rectangle clip fits exactly
+        
+        // Clip to round image corners
+        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(150, 225);
+        clip.setArcWidth(20);
+        clip.setArcHeight(20);
+        poster.setClip(clip);
+
         if (movie.poster_path != null && !movie.poster_path.isEmpty()) {
             String posterUrl = TMDBUtils.getImageUrl(movie.poster_path, "w185");
             poster.setImage(new Image(posterUrl, true));
@@ -110,7 +117,7 @@ public class TMDBSearchController {
         }
 
         // Info
-        VBox infoBox = new VBox(5);
+        VBox infoBox = new VBox(2);
         infoBox.setAlignment(Pos.CENTER);
         
         Label titleLbl = new Label(movie.title);
@@ -121,7 +128,7 @@ public class TMDBSearchController {
         titleLbl.setMinHeight(40);
         titleLbl.setMaxHeight(40);
         
-        Label detailsLbl = new Label("⭐ " + movie.vote_average + "  ·  " + movie.release_date);
+        Label detailsLbl = new Label("⭐ " + movie.vote_average + "  ·  " + (movie.release_date != null && movie.release_date.length() >= 4 ? movie.release_date.substring(0, 4) : ""));
         detailsLbl.setStyle("-fx-font-size: 12px; -fx-text-fill: #777777;");
         
         infoBox.getChildren().addAll(titleLbl, detailsLbl);
