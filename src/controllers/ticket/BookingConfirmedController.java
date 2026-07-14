@@ -13,57 +13,33 @@ public class BookingConfirmedController {
     @FXML private Label showtimeLabel;
     @FXML private Label seatsLabel;
     @FXML private Label totalPaidLabel;
-    @FXML private Label ticketBadgeLabel;
     @FXML private javafx.scene.layout.VBox qrCodeContainer;
-    
-    @FXML private Label displayMovieTitle;
-    @FXML private Label displayShowtime;
-    @FXML private Label displaySeats;
-    @FXML private javafx.scene.layout.VBox displayQrCodeContainer;
-
-    private String currentBookingId;
 
     public void setReceiptData(String bookingId, String movieTitle, String showtime, String seats, String totalPaid) {
-        this.currentBookingId = bookingId;
         bookingIdLabel.setText("Booking ID: " + bookingId);
         movieTitleLabel.setText(movieTitle);
         showtimeLabel.setText(showtime);
         seatsLabel.setText("Seats: " + seats);
         totalPaidLabel.setText("Total Paid: " + totalPaid);
 
-        displayMovieTitle.setText(movieTitle);
-        displayShowtime.setText(showtime);
-        displaySeats.setText(seats);
-
-        // Generate neat QR Code data
-        String qrData = utils.QRCodeUtils.buildTicketPayload(bookingId, movieTitle, showtime, seats);
-        
-        // Setup hidden receipt QR
-        javafx.scene.image.Image qrImg = utils.QRCodeUtils.generateQRCodeImage(qrData, 180, 180);
+        // Generate QR Code data string format: BK-1|The Dark Knight|14:00 - Hall A|Seats: A1, A2
+        String qrData = bookingId + "|" + movieTitle + "|" + showtime + "|" + seats;
+        javafx.scene.image.Image qrImg = utils.QRCodeUtils.generateQRCodeImage(qrData, 120, 120);
         if (qrImg != null) {
             javafx.scene.image.ImageView imgView = new javafx.scene.image.ImageView(qrImg);
-            imgView.setFitWidth(180);
-            imgView.setFitHeight(180);
+            imgView.setFitWidth(120);
+            imgView.setFitHeight(120);
             qrCodeContainer.getChildren().clear();
             qrCodeContainer.getChildren().add(imgView);
-            qrCodeContainer.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;"); 
-        }
-
-        // Setup display QR using the same image
-        if (qrImg != null) {
-            javafx.scene.image.ImageView displayImgView = new javafx.scene.image.ImageView(qrImg);
-            displayImgView.setFitWidth(150);
-            displayImgView.setFitHeight(150);
-            displayImgView.setPreserveRatio(true);
-            displayQrCodeContainer.getChildren().clear();
-            displayQrCodeContainer.getChildren().add(displayImgView);
+            qrCodeContainer.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;"); // Remove dashed border
         }
     }
 
     @FXML
     public void handleDownloadReceipt() {
-        javafx.scene.Node receiptCard = bookingIdLabel.getParent(); // The VBox receipt-card
-        utils.ReceiptUtils.downloadReceiptWithoutBadge(receiptCard, ticketBadgeLabel, bookingIdLabel.getScene().getWindow(), "Receipt_" + currentBookingId);
+        javafx.scene.Node receiptCard = bookingIdLabel.getParent().getParent(); // StackPane -> VBox(receipt-card)
+        String bId = bookingIdLabel.getText().replace("Booking ID: ", "");
+        utils.ReceiptUtils.downloadReceiptAsImage(receiptCard, bookingIdLabel.getScene().getWindow(), "Receipt_" + bId);
     }
 
     @FXML

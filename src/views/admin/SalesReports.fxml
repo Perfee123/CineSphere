@@ -78,12 +78,12 @@
     <!-- Chart Section -->
     <HBox spacing="15.0" prefHeight="350.0">
         <VBox style="-fx-border-color: #eeeeee; -fx-border-radius: 8px; -fx-border-width: 1px;" HBox.hgrow="ALWAYS">
-            <BarChart fx:id="revenueChart" title="Revenue by Movie" legendVisible="false" style="-fx-font-size: 12px;" VBox.vgrow="ALWAYS" animated="false" categoryGap="20">
+            <BarChart fx:id="revenueChart" title="Revenue by Movie" legendVisible="false" style="-fx-font-size: 12px;" VBox.vgrow="ALWAYS">
                 <xAxis>
-                    <CategoryAxis label="Movie Title" animated="false" />
+                    <CategoryAxis label="Movie Title" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Revenue ($)" animated="false" />
+                    <NumberAxis label="Revenue ($)" />
                 </yAxis>
             </BarChart>
         </VBox>
