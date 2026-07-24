@@ -143,7 +143,7 @@ public class AddMovieManuallyController {
             
             // Copy files locally
             try {
-                java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/images");
+                java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/movie");
                 if (!dir.exists()) dir.mkdirs();
                 
                 if (posterPath.startsWith("file:/")) {

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ImageUtils {
 
     // Ensure this directory exists in the actual filesystem
-    private static final String SNACK_IMAGE_DIR = "assets/snacks/";
+    private static final String SNACK_IMAGE_DIR = "data/snack/";
 
     public static String copyImage(File sourceFile) throws IOException {
         if (sourceFile == null || !sourceFile.exists()) {

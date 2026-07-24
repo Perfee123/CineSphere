@@ -133,7 +133,7 @@ public class TMDBUtils {
             java.net.URL url = new java.net.URL(urlStr);
             
             String fileName = prefix + "_" + path.replace("/", "");
-            java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/images");
+            java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/movie");
             if (!dir.exists()) {
                 dir.mkdirs();
             }
