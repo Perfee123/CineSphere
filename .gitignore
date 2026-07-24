@@ -59,6 +59,19 @@ logs/
 download_jars.ps1
 built.bat
 
-# Add these lines to .gitignore
 lib/*.dll
 lib/*.jar
+
+# Keep data directory structure but ignore contents
+data/*
+!data/movie/
+!data/snack/
+
+data/movie/*
+!data/movie/.gitkeep
+
+data/snack/*
+!data/snack/.gitkeep
+
+receipts/*
+!receipts/.gitkeep

@@ -80,6 +80,42 @@ public class BookingDAO {
         return false;
     }
 
+    public int[] getHallDimensions(String showId) {
+        int[] dims = new int[]{8, 10}; // defaults
+        int sId = Integer.parseInt(showId.replace("SH-", ""));
+        String sql = "SELECT h.seat_rows, h.seat_columns FROM shows s JOIN halls h ON s.hall_id = h.id WHERE s.id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, sId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    dims[0] = rs.getInt("seat_rows");
+                    dims[1] = rs.getInt("seat_columns");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dims;
+    }
+
+    public int getHallId(String showId) {
+        int sId = Integer.parseInt(showId.replace("SH-", ""));
+        String sql = "SELECT hall_id FROM shows WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, sId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("hall_id");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
     public List<String> getBookedSeats(String showId) {
         List<String> bookedSeats = new ArrayList<>();
         int sId = Integer.parseInt(showId.replace("SH-", ""));
@@ -186,5 +222,46 @@ public class BookingDAO {
         }
         
         return newBookingId;
+    }
+
+    public BookingPOSDetails getBookingDetailsForPOS(int bookingId) {
+        String sql = "SELECT m.title as movie_name, h.name as hall_name, " +
+                     "DATE_FORMAT(s.show_time, '%Y-%m-%d %H:%i') as show_time, " +
+                     "d.discount_percentage, " +
+                     "GROUP_CONCAT(CONCAT(st.row_label, st.seat_number) SEPARATOR ', ') as seats " +
+                     "FROM bookings b " +
+                     "JOIN shows s ON b.show_id = s.id " +
+                     "JOIN movies m ON s.movie_id = m.id " +
+                     "JOIN halls h ON s.hall_id = h.id " +
+                     "LEFT JOIN discounts d ON s.snack_discount_id = d.id " +
+                     "LEFT JOIN booking_seats bs ON b.id = bs.booking_id " +
+                     "LEFT JOIN seats st ON bs.seat_id = st.id " +
+                     "WHERE b.id = ? AND b.status != 'CANCELLED' " +
+                     "GROUP BY b.id";
+                     
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             
+            stmt.setInt(1, bookingId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String seats = rs.getString("seats");
+                    if (seats == null) seats = "-";
+                    java.math.BigDecimal discount = rs.getBigDecimal("discount_percentage");
+                    if (discount == null) discount = java.math.BigDecimal.ZERO;
+                    
+                    return new BookingPOSDetails(
+                        rs.getString("movie_name"),
+                        rs.getString("hall_name"),
+                        seats,
+                        rs.getString("show_time"),
+                        discount
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

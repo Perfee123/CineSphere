@@ -14,11 +14,17 @@ import models.MovieDAO;
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 
+import javafx.scene.control.ComboBox;
+
 public class AddMovieManuallyController {
 
     @FXML private TextField titleField;
-    @FXML private TextField genreField;
+    @FXML private TextField taglineField;
+    @FXML private ComboBox<String> genreComboBox;
     @FXML private TextField durationField;
+    @FXML private TextField ratingField;
+    @FXML private TextField popularityField;
+    @FXML private TextField releaseDateField;
     @FXML private TextArea synopsisArea;
     
     @FXML private Label posterLabel;
@@ -33,6 +39,14 @@ public class AddMovieManuallyController {
     private String bannerPath = "";
 
     private MovieDAO movieDAO = new MovieDAO();
+    
+    @FXML
+    public void initialize() {
+        genreComboBox.getItems().addAll(
+            "Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Thriller", "Documentary", "Animation", "Family"
+        );
+        genreComboBox.getSelectionModel().selectFirst();
+    }
 
     @FXML
     public void handleBack() {
@@ -72,13 +86,18 @@ public class AddMovieManuallyController {
     @FXML
     public void handleSave() {
         String title = titleField.getText().trim();
-        String genre = genreField.getText().trim();
+        String tagline = taglineField.getText().trim();
+        String genre = genreComboBox.getValue();
         String duration = durationField.getText().trim();
         String synopsis = synopsisArea.getText().trim();
+        String ratingStr = ratingField.getText().trim();
+        String popularityStr = popularityField.getText().trim();
+        String releaseDate = releaseDateField.getText().trim();
         String adultPriceStr = adultPriceField.getText().trim();
         String kidsPriceStr = kidsPriceField.getText().trim();
 
-        if (title.isEmpty() || genre.isEmpty() || duration.isEmpty() || synopsis.isEmpty() ||
+        if (title.isEmpty() || genre == null || duration.isEmpty() || synopsis.isEmpty() ||
+            ratingStr.isEmpty() || popularityStr.isEmpty() || releaseDate.isEmpty() ||
             adultPriceStr.isEmpty() || kidsPriceStr.isEmpty() || showingFromPicker.getValue() == null ||
             showingUntilPicker.getValue() == null || posterPath.isEmpty() || bannerPath.isEmpty()) {
             
@@ -91,14 +110,65 @@ public class AddMovieManuallyController {
             int durationInt = Integer.parseInt(duration);
             double adultPrice = Double.parseDouble(adultPriceStr);
             double kidsPrice = Double.parseDouble(kidsPriceStr);
+            double rating = Double.parseDouble(ratingStr);
+            double popularity = Double.parseDouble(popularityStr);
+
+            if (durationInt < 0 || adultPrice < 0 || kidsPrice < 0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Duration and prices cannot be negative.");
+                alert.showAndWait();
+                return;
+            }
+            if (rating < 0.0 || rating > 10.0) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Rating must be between 0.0 and 10.0.");
+                alert.showAndWait();
+                return;
+            }
             
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String showingFrom = showingFromPicker.getValue().format(formatter);
-            String showingUntil = showingUntilPicker.getValue().format(formatter);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            if (showingUntilPicker.getValue().isBefore(showingFromPicker.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Showing Until date cannot be before Showing From date.");
+                alert.showAndWait();
+                return;
+            }
+            String showingFrom = showingFromPicker.getValue().format(dtf);
+            String showingUntil = showingUntilPicker.getValue().format(dtf);
+
+            try {
+                java.time.LocalDate.parse(releaseDate, dtf);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Release Date must be in YYYY-MM-DD format.");
+                alert.showAndWait();
+                return;
+            }
             
-            Movie movie = new Movie("", title, genre, durationInt + " mins", synopsis, null);
+            // Copy files locally
+            try {
+                java.io.File dir = new java.io.File(System.getProperty("user.dir") + "/data/movie");
+                if (!dir.exists()) dir.mkdirs();
+                
+                if (posterPath.startsWith("file:/")) {
+                    java.io.File src = new java.io.File(java.net.URI.create(posterPath));
+                    java.io.File dest = new java.io.File(dir, "manual_poster_" + System.currentTimeMillis() + "_" + src.getName());
+                    java.nio.file.Files.copy(src.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    posterPath = dest.toURI().toString();
+                }
+                if (bannerPath.startsWith("file:/")) {
+                    java.io.File src = new java.io.File(java.net.URI.create(bannerPath));
+                    java.io.File dest = new java.io.File(dir, "manual_banner_" + System.currentTimeMillis() + "_" + src.getName());
+                    java.nio.file.Files.copy(src.toPath(), dest.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    bannerPath = dest.toURI().toString();
+                }
+            } catch (java.io.IOException ex) {
+                ex.printStackTrace();
+            }
+
+            Movie movie = new Movie("-1", title, genre, durationInt + " mins", synopsis, null);
             movie.setPosterPath(posterPath);
             movie.setBannerPath(bannerPath);
+            movie.setRating(rating);
+            movie.setPopularity(popularity);
+            movie.setReleaseDate(releaseDate);
+            movie.setTagline(tagline);
             movie.setAdultPrice(adultPrice);
             movie.setKidsPrice(kidsPrice);
             movie.setShowingFrom(showingFrom);

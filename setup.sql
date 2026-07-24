@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS shows (
     hall_id INT NOT NULL,
     show_date DATE NOT NULL,
     show_time TIME NOT NULL,
+    snack_discount_id INT,
     status ENUM('SCHEDULED', 'CANCELLED', 'COMPLETED') NOT NULL DEFAULT 'SCHEDULED',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,

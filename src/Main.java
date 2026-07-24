@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 
-        // Check DB connection on startup
+         //Check DB connection on startup
         try (Connection conn = DBUtils.getConnection()) {
             if (conn != null) {
                 System.out.println("Successfully connected to MySQL database.");

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="768.0" prefWidth="774.0" spacing="30.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.snackbar.AddSnackController" stylesheets="@../ticket/ticket.css">
+    <padding>
+        <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+    </padding>
+
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="5.0">
+            <Label fx:id="titleLabel" text="Add New Snack" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            <Label text="Enter the snack details below." style="-fx-font-size: 14px; -fx-text-fill: #666666;" />
+        </VBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button mnemonicParsing="false" onAction="#handleBack" text="Back to Management" style="-fx-background-color: white; -fx-text-fill: #111111; -fx-border-color: #dddddd; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" />
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="30.0">
+        <VBox style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 30px; -fx-pref-width: 600px; -fx-max-width: 600px;" spacing="20.0">
+            <Label text="Basic Information" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #111111;" />
+            
+            <VBox spacing="5.0">
+                <Label text="Snack Name" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                <TextField fx:id="nameField" promptText="e.g. Popcorn Large" styleClass="search-field" style="-fx-pref-width: 500px; -fx-font-size: 14px; -fx-background-color: white;" />
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="Category" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                <ComboBox fx:id="categoryCombo" promptText="Select Category" styleClass="search-combo" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-background-color: white;" />
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="Description" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                <TextArea fx:id="descArea" prefRowCount="3" promptText="Optional details" style="-fx-border-color: #ced4da; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 5px; -fx-font-size: 14px; -fx-background-color: white;" wrapText="true" />
+            </VBox>
+
+            <HBox spacing="20.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Price ($)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="priceField" promptText="0.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Cost Price ($)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="costPriceField" promptText="0.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Stock Quantity" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="quantityField" promptText="0" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Min Stock / Reorder Threshold" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="minStockField" promptText="0" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+            </HBox>
+
+            <VBox spacing="5.0">
+                <Label text="Status" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                <ComboBox fx:id="statusCombo" promptText="Select Status" styleClass="search-combo" maxWidth="Infinity" style="-fx-font-size: 14px; -fx-background-color: white;" />
+            </VBox>
+
+            <VBox spacing="5.0">
+                <Label text="Snack Image" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                <HBox alignment="CENTER_LEFT" spacing="15.0">
+                    <Button mnemonicParsing="false" text="Choose File" onAction="#handleChooseImage" styleClass="search-btn" style="-fx-background-color: white;" />
+                    <Label fx:id="imagePathLabel" text="No file selected..." style="-fx-font-size: 13px; -fx-font-style: italic; -fx-text-fill: #777777;" />
+                </HBox>
+            </VBox>
+
+            <HBox alignment="CENTER_RIGHT" spacing="15.0" style="-fx-padding: 30px 0 0 0;">
+                <Button mnemonicParsing="false" onAction="#handleCancel" text="Cancel" styleClass="secondary-action-btn" />
+                <Button mnemonicParsing="false" onAction="#handleSave" text="Save Snack" styleClass="primary-action-btn" />
+            </HBox>
+        </VBox>
+    </VBox>
+</VBox>
