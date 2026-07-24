@@ -57,7 +57,7 @@ public class SnackOverviewController {
         for (Snack s : allSnacks) {
             if ("ACTIVE".equals(s.getStatus())) {
                 activeCount++;
-                if (s.getQuantity() < 10) {
+                if (s.getQuantity() < s.getMinStock()) {
                     lowStockList.add(s);
                 }
             }

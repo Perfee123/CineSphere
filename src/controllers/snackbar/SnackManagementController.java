@@ -114,7 +114,7 @@ public class SnackManagementController {
         statusLabel.setStyle("-fx-background-radius: 10px;");
         
         if ("ACTIVE".equals(snack.getStatus())) {
-            if (snack.getQuantity() < 10) {
+            if (snack.getQuantity() < snack.getMinStock()) {
                 statusLabel.setStyle(statusLabel.getStyle() + "-fx-background-color: #ffeeba; -fx-text-fill: #856404;");
             } else {
                 statusLabel.setStyle(statusLabel.getStyle() + "-fx-background-color: #d4edda; -fx-text-fill: #155724;");

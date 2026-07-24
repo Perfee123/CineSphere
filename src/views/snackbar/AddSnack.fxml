@@ -51,8 +51,19 @@
                     <TextField fx:id="priceField" promptText="0.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
                 </VBox>
                 <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Cost Price ($)" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="costPriceField" promptText="0.00" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="20.0">
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
                     <Label text="Stock Quantity" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
                     <TextField fx:id="quantityField" promptText="0" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
+                </VBox>
+                <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+                    <Label text="Min Stock / Reorder Threshold" style="-fx-font-size: 13px; -fx-text-fill: #555555;" />
+                    <TextField fx:id="minStockField" promptText="0" styleClass="search-field" style="-fx-font-size: 14px; -fx-background-color: white;" />
                 </VBox>
             </HBox>
 

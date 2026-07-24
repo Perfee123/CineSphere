@@ -199,17 +199,36 @@ public class ScheduleMovieController implements Initializable {
             return;
         }
 
-        // Conflict Detection
+        // Runtime calculation
         int runtimeMins = 120; // Default
         try {
             runtimeMins = Integer.parseInt(currentMovie.getRuntime().replace(" mins", "").trim());
         } catch (Exception e) {}
 
+        // Check for overlaps among proposed times for each date
+        for (LocalDate d : addedDates) {
+            for (int i = 0; i < addedTimes.size(); i++) {
+                for (int j = i + 1; j < addedTimes.size(); j++) {
+                    LocalTime start1 = LocalTime.parse(addedTimes.get(i));
+                    LocalTime end1 = start1.plusMinutes(runtimeMins);
+                    LocalTime start2 = LocalTime.parse(addedTimes.get(j));
+                    LocalTime end2 = start2.plusMinutes(runtimeMins);
+
+                    // Check if windows overlap
+                    if ((start1.isBefore(end2) && end1.isAfter(start2))) {
+                        showError("Time Overlap Detected: Shows at " + addedTimes.get(i) + " and " + addedTimes.get(j) + " overlap on " + d.toString() + ". Please adjust the times.");
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Conflict Detection with existing shows
         for (LocalDate d : addedDates) {
             for (String t : addedTimes) {
                 LocalTime start = LocalTime.parse(t);
                 LocalTime end = start.plusMinutes(runtimeMins);
-                
+
                 if (showDAO.isHallOccupied(hall.getId(), d.toString(), start.toString(), end.toString())) {
                     showError("Conflict Detected: Hall " + hall.getName() + " is already occupied on " + d.toString() + " between " + start.toString() + " and " + end.toString() + ". Please select different times or another hall.");
                     return;

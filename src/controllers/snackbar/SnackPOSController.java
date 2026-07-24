@@ -21,6 +21,8 @@ import models.SnackSaleDAO;
 import models.SnackSaleItem;
 import models.BookingDAO;
 import models.BookingPOSDetails;
+import models.PromoCode;
+import models.PromoCodeDAO;
 import utils.SnackReceiptGenerator;
 
 import java.math.BigDecimal;
@@ -59,6 +61,7 @@ public class SnackPOSController {
     private SnackDAO snackDAO = new SnackDAO();
     private SnackSaleDAO saleDAO = new SnackSaleDAO();
     private BookingDAO bookingDAO = new BookingDAO();
+    private PromoCodeDAO promoCodeDAO = new PromoCodeDAO();
     
     private List<Snack> allSnacks;
     private ObservableList<SnackSaleItem> cartData = FXCollections.observableArrayList();
@@ -362,12 +365,14 @@ public class SnackPOSController {
         if (code == null || code.trim().isEmpty()) {
             currentDiscountPercentage = BigDecimal.ZERO;
             showAlert("Error", "Please enter a discount code.");
-        } else if ("STAFF10".equalsIgnoreCase(code.trim())) {
-            currentDiscountPercentage = new BigDecimal("10.00");
-            showAlert("Success", "10% Discount Applied!");
-        } else if ("PROMO20".equalsIgnoreCase(code.trim())) {
-            currentDiscountPercentage = new BigDecimal("20.00");
-            showAlert("Success", "20% Discount Applied!");
+            updateTotals();
+            return;
+        }
+
+        PromoCode promo = promoCodeDAO.getPromoCode(code.trim());
+        if (promo != null) {
+            currentDiscountPercentage = promo.getDiscountPercentage();
+            showAlert("Success", promo.getDiscountPercentage() + "% Discount Applied!");
         } else {
             currentDiscountPercentage = BigDecimal.ZERO;
             showAlert("Error", "Invalid discount code.");

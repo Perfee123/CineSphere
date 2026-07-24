@@ -11,9 +11,22 @@ public class DBUpdater {
             try {
                 stmt.execute("ALTER TABLE snacks ADD COLUMN cost_price DECIMAL(10,2) DEFAULT 0.00 AFTER price");
             } catch (Exception e) { System.out.println(e.getMessage()); }
-            
+
             try {
                 stmt.execute("ALTER TABLE snacks ADD COLUMN min_stock INT DEFAULT 10 AFTER quantity");
+            } catch (Exception e) { System.out.println(e.getMessage()); }
+
+            System.out.println("Updating shows table...");
+            try {
+                stmt.execute("ALTER TABLE shows ADD COLUMN snack_discount_id INT AFTER show_time");
+            } catch (Exception e) { System.out.println(e.getMessage()); }
+
+            System.out.println("Updating snack_sales table...");
+            try {
+                stmt.execute("ALTER TABLE snack_sales ADD COLUMN user_id INT AFTER booking_id");
+            } catch (Exception e) { System.out.println(e.getMessage()); }
+            try {
+                stmt.execute("ALTER TABLE snack_sales ADD FOREIGN KEY (user_id) REFERENCES users(id)");
             } catch (Exception e) { System.out.println(e.getMessage()); }
 
             System.out.println("Creating inventory_logs table...");

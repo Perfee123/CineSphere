@@ -42,8 +42,12 @@ public class DBUtils {
     public static Connection getConnection() throws SQLException {
         String url = env.getOrDefault("DB_URL", "jdbc:mysql://localhost:3306/cinesphere");
         String user = env.getOrDefault("DB_USER", "root");
-        String password = env.getOrDefault("DB_PASSWORD", "groot");
-        
+        String password = env.get("DB_PASSWORD");
+
+        if (password == null) {
+            throw new SQLException("DB_PASSWORD environment variable is not set. Please configure database credentials in .env file.");
+        }
+
         return DriverManager.getConnection(url, user, password);
     }
 }

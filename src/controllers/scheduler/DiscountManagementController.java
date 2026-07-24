@@ -19,6 +19,8 @@ import models.ShowDAO;
 import models.ShowTableItem;
 import models.PromoCode;
 import models.PromoCodeDAO;
+import models.Snack;
+import models.SnackDAO;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -49,6 +51,7 @@ public class DiscountManagementController implements Initializable {
     private MovieDAO movieDAO = new MovieDAO();
     private ShowDAO showDAO = new ShowDAO();
     private PromoCodeDAO promoCodeDAO = new PromoCodeDAO();
+    private SnackDAO snackDAO = new SnackDAO();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -102,7 +105,15 @@ public class DiscountManagementController implements Initializable {
             } else if ("SHOW".equals(d.getTargetType())) {
                 d.setTargetName("Show ID: " + d.getTargetId());
             } else if ("SNACK".equals(d.getTargetType())) {
-                d.setTargetName("Snack ID: " + d.getTargetId());
+                Snack snack = snackDAO.getAllSnacks().stream()
+                    .filter(s -> s.getId() == d.getTargetId())
+                    .findFirst()
+                    .orElse(null);
+                if (snack != null) {
+                    d.setTargetName(snack.getName());
+                } else {
+                    d.setTargetName("Snack ID: " + d.getTargetId());
+                }
             }
         }
         
@@ -138,7 +149,7 @@ public class DiscountManagementController implements Initializable {
             } else if ("SHOW".equals(newVal)) {
                 itemCombo.setItems(FXCollections.observableArrayList(showDAO.getUpcomingShows()));
             } else if ("SNACK".equals(newVal)) {
-                itemCombo.getItems().add("Wait for Snack Impl");
+                itemCombo.setItems(FXCollections.observableArrayList(snackDAO.getAllSnacks()));
             }
         });
 
@@ -175,8 +186,10 @@ public class DiscountManagementController implements Initializable {
                         targetId = Integer.parseInt(((Movie)item).getId().replace("M", ""));
                     } else if (item instanceof ShowTableItem) {
                         targetId = Integer.parseInt(((ShowTableItem)item).getShowId().replace("SH-", ""));
+                    } else if (item instanceof Snack) {
+                        targetId = ((Snack)item).getId();
                     }
-                    
+
                     Discount d = new Discount(0, type, targetId, pct, status, null, null);
                     return d;
                 } catch (Exception e) {
