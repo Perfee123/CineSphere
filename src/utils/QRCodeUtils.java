@@ -16,13 +16,6 @@ import java.util.Map;
 
 public class QRCodeUtils {
 
-    public static String buildTicketPayload(String bookingId, String movieTitle, String showtime, String seats) {
-        return "Booking ID: " + bookingId + "\n" +
-               "Movie: " + movieTitle + "\n" +
-               "Showtime: " + showtime + "\n" +
-               "Seats: " + seats;
-    }
-
     public static Image generateQRCodeImage(String data, int width, int height) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();

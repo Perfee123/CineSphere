@@ -13,13 +13,6 @@ import java.io.IOException;
 
 public class ReceiptUtils {
 
-    public static void downloadReceiptWithoutBadge(Node receiptCard, javafx.scene.control.Label badgeLabel, Window ownerWindow, String fileName) {
-        boolean wasVisible = badgeLabel.isVisible();
-        badgeLabel.setVisible(false);
-        downloadReceiptAsImage(receiptCard, ownerWindow, fileName);
-        badgeLabel.setVisible(wasVisible);
-    }
-
     public static void downloadReceiptAsImage(Node nodeToSnapshot, Window ownerWindow, String defaultFileName) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Receipt");

@@ -52,6 +52,7 @@
     <!-- TableView -->
     <TableView fx:id="showsTable" VBox.vgrow="ALWAYS" styleClass="shows-table">
         <columns>
+            <TableColumn fx:id="colInfo" text="" prefWidth="40" sortable="false"/>
             <TableColumn fx:id="colShowId" text="Show ID" prefWidth="100"/>
             <TableColumn fx:id="colMovieTitle" text="Movie Title" prefWidth="250"/>
             <TableColumn fx:id="colHall" text="Hall" prefWidth="120"/>

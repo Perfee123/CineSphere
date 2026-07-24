@@ -426,15 +426,3 @@
 .table-row-active:hover, .table-row-active:hover .table-cell { -fx-background-color: #badbcc; }
 .table-row-inactive, .table-row-inactive .table-cell { -fx-background-color: #f8d7da; }
 .table-row-inactive:hover, .table-row-inactive:hover .table-cell { -fx-background-color: #f1b0b7; }
-
-.table-row-checkedin:selected, .table-row-checkedin:selected .table-cell,
-.table-row-cancelled:selected, .table-row-cancelled:selected .table-cell,
-.table-row-active:selected, .table-row-active:selected .table-cell,
-.table-row-inactive:selected, .table-row-inactive:selected .table-cell,
-.table-row-available:selected, .table-row-available:selected .table-cell,
-.table-row-booked:selected, .table-row-booked:selected .table-cell,
-.table-row-confirmed:selected, .table-row-confirmed:selected .table-cell,
-.table-row-cell:selected, .table-row-cell:selected .table-cell {
-    -fx-background-color: #e7f1ff;
-    -fx-text-fill: #212529;
-}
