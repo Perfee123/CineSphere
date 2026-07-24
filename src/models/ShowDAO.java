@@ -61,6 +61,56 @@ public class ShowDAO {
         return shows;
     }
 
+    public List<ShowTableItem> getUpcomingShows() {
+        List<ShowTableItem> shows = new ArrayList<>();
+        String sql = "SELECT s.id as show_id, m.title as movie_title, h.name as hall_name, " +
+                     "DATE_FORMAT(s.show_time, '%H:%i') as show_time, h.total_seats, " +
+                     "(SELECT COUNT(*) FROM booking_seats bs JOIN bookings b ON bs.booking_id = b.id WHERE b.show_id = s.id AND b.status != 'CANCELLED') as booked_seats, " +
+                     "s.status " +
+                     "FROM shows s " +
+                     "JOIN movies m ON s.movie_id = m.id " +
+                     "JOIN halls h ON s.hall_id = h.id " +
+                     "WHERE s.show_date >= CURDATE()";
+                     
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+             
+            while (rs.next()) {
+                String showId = "SH-" + rs.getInt("show_id");
+                String movieTitle = rs.getString("movie_title");
+                String hall = rs.getString("hall_name");
+                String time = rs.getString("show_time");
+                int totalSeats = rs.getInt("total_seats");
+                int bookedSeats = rs.getInt("booked_seats");
+                String seats = bookedSeats + "/" + totalSeats;
+                
+                String status = "Available";
+                if ("CANCELLED".equals(rs.getString("status"))) {
+                    status = "Cancelled";
+                } else if (bookedSeats >= totalSeats) {
+                    status = "Fully Booked";
+                }
+                
+                String rawTime = rs.getString("show_time");
+                int hour = 0;
+                try {
+                    hour = Integer.parseInt(rawTime.split(":")[0]);
+                } catch (Exception e) {}
+                
+                String period = "Morning";
+                if (hour >= 12 && hour < 17) period = "Afternoon";
+                else if (hour >= 17 && hour < 20) period = "Evening";
+                else if (hour >= 20) period = "Night";
+                
+                shows.add(new ShowTableItem(showId, movieTitle, hall, time, seats, status, period));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return shows;
+    }
+
     public List<Movie> getActiveMoviesWithShowtimes() {
         Map<Integer, Movie> movieMap = new LinkedHashMap<>();
         
