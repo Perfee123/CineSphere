@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" stylesheets="@../ticket/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.scheduler.ScheduleMovieController">
+    <VBox spacing="15" style="-fx-padding: 40; -fx-background-color: #f8f9fa;">
+        
+        <!-- Back Button -->
+        <Button text="← Back to Movies" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #3b82f6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 0; -fx-cursor: hand;" />
+        
+        <!-- Top Bar -->
+        <HBox alignment="CENTER_LEFT">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #212529;" text="Schedule Movie" />
+                <Label style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" text="Set a date range and assign multiple showtimes." />
+            </VBox>
+        </HBox>
+
+        <Region prefHeight="15" />
+
+        <VBox alignment="TOP_CENTER" spacing="30">
+            <!-- Movie Details Banner -->
+            <HBox spacing="20" maxWidth="800" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-border-width: 1px; -fx-padding: 20;" alignment="CENTER_LEFT">
+                <ImageView fx:id="moviePoster" fitHeight="150" fitWidth="100" preserveRatio="true" />
+                <VBox spacing="10" HBox.hgrow="ALWAYS">
+                    <Label fx:id="movieTitle" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0f172a;" text="Movie Title" wrapText="true" />
+                    <HBox spacing="15">
+                        <Label fx:id="movieGenre" style="-fx-font-size: 14px; -fx-text-fill: #64748b;" text="Genre" />
+                        <Label fx:id="movieDuration" style="-fx-font-size: 14px; -fx-text-fill: #64748b; -fx-font-weight: bold;" text="Duration" />
+                    </HBox>
+                    <Label fx:id="movieLicensedPeriod" style="-fx-font-size: 14px; -fx-text-fill: #059669; -fx-font-weight: bold;" text="Licensed: YYYY-MM-DD to YYYY-MM-DD" wrapText="true" />
+                </VBox>
+            </HBox>
+
+            <!-- Form Area -->
+            <VBox spacing="25" maxWidth="800" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-border-width: 1px; -fx-padding: 40;">
+                <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #111111;" text="Schedule Dates &amp; Times" />
+
+                <VBox spacing="8">
+                    <Label style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" text="Select Hall" />
+                    <ComboBox fx:id="hallComboBox" maxWidth="Infinity" prefHeight="40" styleClass="search-combo" />
+                </VBox>
+
+                <VBox spacing="10">
+                    <Label style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" text="Select Dates to Schedule" />
+                    <HBox spacing="10">
+                        <DatePicker fx:id="dateField" prefHeight="40" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleAddDate" prefHeight="40" styleClass="secondary-btn" text="+ Add Date" />
+                    </HBox>
+                    <FlowPane fx:id="datesGrid" hgap="10" vgap="10">
+                        <padding>
+                            <Insets top="10" />
+                        </padding>
+                    </FlowPane>
+                </VBox>
+
+                <VBox spacing="10">
+                    <Label style="-fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: bold;" text="Showtimes (e.g. 10:00, 14:30)" />
+                    <HBox spacing="10">
+                        <TextField fx:id="timeField" prefHeight="40" promptText="HH:mm" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                        <Button onAction="#handleAddTime" prefHeight="40" styleClass="secondary-btn" text="+ Add Time" />
+                    </HBox>
+                    <FlowPane fx:id="timesGrid" hgap="10" vgap="10">
+                        <padding>
+                            <Insets top="10" />
+                        </padding>
+                    </FlowPane>
+                </VBox>
+
+                <Label fx:id="errorLabel" managed="false" textFill="#dc3545" visible="false" wrapText="true" />
+                
+                <Button maxWidth="Infinity" onAction="#handleGenerateSchedule" prefHeight="50" styleClass="action-btn" text="Generate Schedule" />
+            </VBox>
+        </VBox>
+    </VBox>
+</ScrollPane>

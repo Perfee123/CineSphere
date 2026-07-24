@@ -86,4 +86,9 @@ public class Movie {
 
     public String getTagline() { return tagline; }
     public void setTagline(String tagline) { this.tagline = tagline; }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

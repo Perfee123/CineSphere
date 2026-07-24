@@ -53,6 +53,7 @@ public class MovieManagementController {
         new Thread(() -> {
             try {
                 List<Movie> movies = movieDAO.getActiveMovies();
+                List<Movie> pendingMovies = movieDAO.getPendingMovies();
                 
                 javafx.application.Platform.runLater(() -> {
                     moviesListContainer.getChildren().clear();
@@ -65,7 +66,8 @@ public class MovieManagementController {
                     } else {
                         moviesListContainer.setAlignment(Pos.TOP_LEFT);
                         for (Movie movie : movies) {
-                            HBox row = createMovieRow(movie);
+                            boolean isPending = pendingMovies.stream().anyMatch(m -> m.getId().equals(movie.getId()));
+                            HBox row = createMovieRow(movie, isPending);
                             moviesListContainer.getChildren().add(row);
                         }
                     }
@@ -82,7 +84,7 @@ public class MovieManagementController {
         }).start();
     }
 
-    private HBox createMovieRow(Movie movie) {
+    private HBox createMovieRow(Movie movie, boolean isPending) {
         HBox row = new HBox(20);
         row.setAlignment(Pos.CENTER_LEFT);
         row.setPadding(new Insets(15, 20, 15, 20));
@@ -139,6 +141,12 @@ public class MovieManagementController {
             Label tmdbBadge = new Label("TMDB");
             tmdbBadge.setStyle("-fx-background-color: #032541; -fx-text-fill: white; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 4px;");
             titleBox.getChildren().add(tmdbBadge);
+        }
+
+        if (isPending) {
+            Label pendingBadge = new Label("Pending Schedule");
+            pendingBadge.setStyle("-fx-background-color: #fde68a; -fx-text-fill: #92400e; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 4px; -fx-border-color: #f59e0b; -fx-border-radius: 4px; -fx-border-width: 1px;");
+            titleBox.getChildren().add(pendingBadge);
         }
 
         Label dateLbl = new Label("Showing: " + movie.getShowingFrom() + " - " + movie.getShowingUntil());

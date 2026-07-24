@@ -10,14 +10,16 @@ public class ShowTableItem {
     private final StringProperty time;
     private final StringProperty seats;
     private final StringProperty status;
+    private final StringProperty period;
 
-    public ShowTableItem(String showId, String movieTitle, String hall, String time, String seats, String status) {
+    public ShowTableItem(String showId, String movieTitle, String hall, String time, String seats, String status, String period) {
         this.showId = new SimpleStringProperty(showId);
         this.movieTitle = new SimpleStringProperty(movieTitle);
         this.hall = new SimpleStringProperty(hall);
         this.time = new SimpleStringProperty(time);
         this.seats = new SimpleStringProperty(seats);
         this.status = new SimpleStringProperty(status);
+        this.period = new SimpleStringProperty(period);
     }
 
     public String getShowId() { return showId.get(); }
@@ -37,4 +39,12 @@ public class ShowTableItem {
 
     public String getStatus() { return status.get(); }
     public StringProperty statusProperty() { return status; }
+
+    public String getPeriod() { return period.get(); }
+    public StringProperty periodProperty() { return period; }
+
+    @Override
+    public String toString() {
+        return getMovieTitle() + " (" + getHall() + " @ " + getTime() + ")";
+    }
 }

@@ -1,37 +1,68 @@
-C:\Users\HP\Documents\CineSphere\src\Main.java
-C:\Users\HP\Documents\CineSphere\src\controllers\LoginController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\MainLayoutController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\AddMovieManuallyController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\AddNewMovieTypeDialogController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\AdminOverviewController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\EditMoviePricingDialogController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\MovieManagementController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\ReportTimeframeDialogController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\SalesReportsController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\StaffDialogController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\StaffManagementController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\admin\TMDBSearchController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\BookingConfirmedController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\BookingHistoryController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\BookingTicketController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\BookingVerificationController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\MovieDetailsController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\NowShowingController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\SeatSelectionController.java
-C:\Users\HP\Documents\CineSphere\src\controllers\ticket\TicketOverviewController.java
-C:\Users\HP\Documents\CineSphere\src\models\BookingDAO.java
-C:\Users\HP\Documents\CineSphere\src\models\BookingTableItem.java
-C:\Users\HP\Documents\CineSphere\src\models\Movie.java
-C:\Users\HP\Documents\CineSphere\src\models\MovieDAO.java
-C:\Users\HP\Documents\CineSphere\src\models\MovieDTO.java
-C:\Users\HP\Documents\CineSphere\src\models\ShowDAO.java
-C:\Users\HP\Documents\CineSphere\src\models\ShowTableItem.java
-C:\Users\HP\Documents\CineSphere\src\models\Showtime.java
-C:\Users\HP\Documents\CineSphere\src\models\TransactionTableItem.java
-C:\Users\HP\Documents\CineSphere\src\models\User.java
-C:\Users\HP\Documents\CineSphere\src\models\UserDAO.java
-C:\Users\HP\Documents\CineSphere\src\utils\DBUtils.java
-C:\Users\HP\Documents\CineSphere\src\utils\EnvUtils.java
-C:\Users\HP\Documents\CineSphere\src\utils\QRCodeUtils.java
-C:\Users\HP\Documents\CineSphere\src\utils\ReceiptUtils.java
-C:\Users\HP\Documents\CineSphere\src\utils\TMDBUtils.java
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/AddCashierToSales.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/DBUpdater.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/Main.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/TestFXML.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/LoginController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/MainLayoutController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/AddMovieManuallyController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/AddNewMovieTypeDialogController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/AdminOverviewController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/EditMoviePricingDialogController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/MovieManagementController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/ReportTimeframeDialogController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/SalesReportsController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/StaffDialogController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/StaffManagementController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/admin/TMDBSearchController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/AddHallController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/DiscountManagementController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/EditHallController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/HallManagementController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/ManageMovieSchedulesController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/PendingShowsController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/ScheduleMovieController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/SchedulerOverviewController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/scheduler/ShowSchedulingController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/snackbar/AddSnackController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/snackbar/SnackBillsController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/snackbar/SnackManagementController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/snackbar/SnackOverviewController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/snackbar/SnackPOSController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/BookingConfirmedController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/BookingHistoryController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/BookingTicketController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/BookingVerificationController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/MovieDetailsController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/NowShowingController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/SeatSelectionController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/controllers/ticket/TicketOverviewController.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/BookingDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/BookingPOSDetails.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/BookingTableItem.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/Discount.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/DiscountDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/Hall.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/HallDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/Movie.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/MovieDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/MovieDTO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/PromoCode.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/PromoCodeDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/ShowDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/ShowTableItem.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/Showtime.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/Snack.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/SnackDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/SnackSale.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/SnackSaleDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/SnackSaleItem.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/TransactionTableItem.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/User.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/models/UserDAO.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/DBUtils.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/EnvUtils.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/ImageUtils.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/QRCodeUtils.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/ReceiptUtils.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/SnackReceiptGenerator.java"
+"D:/LNBTI/Semesters/Semester 2/Object Oriented Programming/Project/CineSphere/src/utils/TMDBUtils.java"

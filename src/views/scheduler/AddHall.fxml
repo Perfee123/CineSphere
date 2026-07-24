@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 30;" stylesheets="@../ticket/ticket.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.scheduler.AddHallController">
+   <children>
+      <HBox>
+         <Button text="← Back to Hall Management" styleClass="back-btn" onAction="#handleCancel" />
+      </HBox>
+
+      <HBox spacing="30" VBox.vgrow="ALWAYS">
+         <children>
+            <!-- Left Side: Live Preview (Matched to SeatSelection.fxml) -->
+            <VBox HBox.hgrow="ALWAYS" alignment="TOP_CENTER" spacing="20" style="-fx-background-color: #fafafa; -fx-background-radius: 10; -fx-padding: 30;">
+               <children>
+                  <Label style="-fx-font-weight: bold; -fx-text-fill: #111111; -fx-font-size: 18px;" text="Seat Map Preview" />
+                  <Label style="-fx-text-fill: #6c757d; -fx-font-size: 13px;" text="Updates automatically (Max: 10 Rows, 15 Cols)" />
+                  <Region prefHeight="10" />
+                  
+                  <Label text="SCREEN" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #6c757d;" />
+                  <Region style="-fx-background-color: #dee2e6; -fx-pref-height: 4px; -fx-max-width: 600px; -fx-background-radius: 2;" />
+                  
+                  <javafx.scene.control.ScrollPane fitToWidth="true" fitToHeight="true" VBox.vgrow="ALWAYS" style="-fx-background: transparent; -fx-background-color: transparent;">
+                     <content>
+                        <GridPane fx:id="seatGridPreview" alignment="CENTER" hgap="10.0" vgap="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </GridPane>
+                     </content>
+                  </javafx.scene.control.ScrollPane>
+               </children>
+            </VBox>
+            
+            <!-- Right Side: Form (Matched to SeatSelection.fxml summary card style) -->
+            <VBox prefWidth="350" spacing="20" alignment="TOP_LEFT">
+               <children>
+                  <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #212529;" text="Configure Hall" />
+                  
+                  <VBox styleClass="summary-card" spacing="20">
+                     <children>
+                        <VBox spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight: bold; -fx-text-fill: #475569;" text="Hall Name" />
+                              <TextField fx:id="nameField" promptText="e.g. IMAX 1" styleClass="search-field" style="-fx-pref-height: 40;" />
+                           </children>
+                        </VBox>
+                        
+                        <VBox spacing="8">
+                           <children>
+                              <Label style="-fx-font-weight: bold; -fx-text-fill: #475569;" text="Hall Type" />
+                              <ComboBox fx:id="typeComboBox" maxWidth="1.7976931348623157E308" promptText="Select Type" styleClass="search-combo" style="-fx-pref-height: 40;" />
+                           </children>
+                        </VBox>
+                        
+                        <HBox spacing="15">
+                           <children>
+                              <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569;" text="Seat Rows" />
+                                    <TextField fx:id="rowsField" promptText="e.g. 10" styleClass="search-field" style="-fx-pref-height: 40;" />
+                                 </children>
+                              </VBox>
+                              <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-text-fill: #475569;" text="Columns" />
+                                    <TextField fx:id="colsField" promptText="e.g. 12" styleClass="search-field" style="-fx-pref-height: 40;" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        
+                        <CheckBox fx:id="kidsHallCheck" text="Designate as Kids Hall" style="-fx-text-fill: #0d6efd; -fx-font-weight: bold;">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </CheckBox>
+                        
+                        <Label fx:id="errorLabel" style="-fx-text-fill: #dc2626;" visible="false" wrapText="true" />
+                     </children>
+                  </VBox>
+                  
+                  <Region VBox.vgrow="ALWAYS" />
+                  
+                  <Button mnemonicParsing="false" onAction="#handleSave" styleClass="primary-action-btn" maxWidth="Infinity" style="-fx-pref-height: 45;" text="Save Hall" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

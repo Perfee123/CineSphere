@@ -18,14 +18,14 @@ public class StaffDialogController {
     @FXML private ComboBox<String> roleComboBox;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private Button saveButton;
-
+ 
     private User currentUser;
     private UserDAO userDAO;
     private boolean saved = false;
 
     @FXML
     public void initialize() {
-        roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "TICKET_STAFF", "SNACK_STAFF"));
+        roleComboBox.setItems(FXCollections.observableArrayList("ADMIN", "TICKET_STAFF", "SCHEDULER", "SNACK_STAFF"));
         statusComboBox.setItems(FXCollections.observableArrayList("ACTIVE", "INACTIVE"));
     }
 

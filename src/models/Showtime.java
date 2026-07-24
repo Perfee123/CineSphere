@@ -20,4 +20,13 @@ public class Showtime {
     public String getHall() { return hall; }
     public int getAvailableSeats() { return availableSeats; }
     public int getTotalSeats() { return totalSeats; }
+    
+    private String rawDate;
+    private String rawTime;
+    
+    public String getRawDate() { return rawDate; }
+    public void setRawDate(String rawDate) { this.rawDate = rawDate; }
+    
+    public String getRawTime() { return rawTime; }
+    public void setRawTime(String rawTime) { this.rawTime = rawTime; }
 }

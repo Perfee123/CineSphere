@@ -201,4 +201,109 @@ public class MovieDAO {
         }
         return false;
     }
+
+    public List<Movie> getAllMovies() {
+        return getActiveMovies(); // For scheduling, we only care about active movies
+    }
+
+    public Movie getMovieById(int id) {
+        String sql = "SELECT * FROM movies WHERE id = ?";
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String movieId = "M" + rs.getInt("id");
+                    String title = rs.getString("title");
+                    String genre = rs.getString("genre");
+                    String duration = rs.getInt("duration_minutes") + " mins";
+                    String description = rs.getString("description");
+                    
+                    Movie movie = new Movie(movieId, title, genre, duration, description, new ArrayList<>());
+                    movie.setTmdbId(rs.getInt("tmdb_id"));
+                    if (rs.wasNull()) {
+                        movie.setTmdbId(-1);
+                    }
+                    movie.setPosterPath(rs.getString("poster_path"));
+                    movie.setBannerPath(rs.getString("banner_path"));
+                    movie.setShowingFrom(rs.getString("showing_from"));
+                    movie.setShowingUntil(rs.getString("showing_until"));
+                    movie.setAdultPrice(rs.getDouble("adult_price"));
+                    movie.setKidsPrice(rs.getDouble("kids_price"));
+                    movie.setRating(rs.getDouble("rating"));
+                    movie.setPopularity(rs.getDouble("popularity"));
+                    movie.setReleaseDate(rs.getString("release_date"));
+                    movie.setTagline(rs.getString("tagline"));
+                    
+                    return movie;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Movie> getPendingMovies() {
+        List<Movie> movies = new ArrayList<>();
+        String sql = "SELECT m.* FROM movies m LEFT JOIN shows s ON m.id = s.movie_id WHERE s.id IS NULL AND m.status = 'ACTIVE'";
+
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String id = "M" + rs.getInt("id");
+                String title = rs.getString("title");
+                String genre = rs.getString("genre");
+                String duration = rs.getInt("duration_minutes") + " mins";
+                String description = rs.getString("description");
+                
+                Movie movie = new Movie(id, title, genre, duration, description, new ArrayList<>());
+                movie.setTmdbId(rs.getInt("tmdb_id"));
+                if (rs.wasNull()) {
+                    movie.setTmdbId(-1);
+                }
+                movie.setPosterPath(rs.getString("poster_path"));
+                movie.setBannerPath(rs.getString("banner_path"));
+                movie.setShowingFrom(rs.getString("showing_from"));
+                movie.setShowingUntil(rs.getString("showing_until"));
+                movie.setAdultPrice(rs.getDouble("adult_price"));
+                movie.setKidsPrice(rs.getDouble("kids_price"));
+                movie.setRating(rs.getDouble("rating"));
+                movie.setPopularity(rs.getDouble("popularity"));
+                movie.setReleaseDate(rs.getString("release_date"));
+                movie.setTagline(rs.getString("tagline"));
+                
+                movies.add(movie);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
+
+    public String getMostPopularMovieTitle() {
+        String sql = "SELECT m.title, COUNT(bs.id) as ticket_count " +
+                     "FROM movies m " +
+                     "JOIN shows s ON m.id = s.movie_id " +
+                     "JOIN bookings b ON s.id = b.show_id " +
+                     "JOIN booking_seats bs ON b.id = bs.booking_id " +
+                     "WHERE b.status != 'CANCELLED' " +
+                     "GROUP BY m.id, m.title " +
+                     "ORDER BY ticket_count DESC " +
+                     "LIMIT 1";
+        
+        try (Connection conn = DBUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                return rs.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "No Data Yet";
+    }
 }

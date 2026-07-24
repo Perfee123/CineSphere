@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-    role ENUM('ADMIN', 'TICKET_STAFF') NOT NULL,
+    role ENUM('ADMIN', 'TICKET_STAFF', 'SCHEDULER', 'SNACK_STAFF') NOT NULL,
     status ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -100,7 +100,96 @@ CREATE TABLE IF NOT EXISTS booking_seats (
     UNIQUE KEY unique_booking_seat (booking_id, seat_id)
 );
 
--- 8. Stored Procedure: Auto-Generate Seats
+-- 7.5 Discounts Table
+CREATE TABLE IF NOT EXISTS discounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    target_type ENUM('SHOW', 'SNACK', 'MOVIE') NOT NULL,
+    target_id INT NOT NULL,
+    discount_percentage DECIMAL(5,2) NOT NULL,
+    status ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 7.6 Promo Codes Table
+CREATE TABLE IF NOT EXISTS promo_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    discount_percentage DECIMAL(5,2) NOT NULL,
+    status ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 8. Snacks Tables
+CREATE TABLE IF NOT EXISTS snacks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    price DECIMAL(10,2) NOT NULL,
+    cost_price DECIMAL(10,2) DEFAULT 0.00,
+    quantity INT DEFAULT 0,
+    min_stock INT DEFAULT 10,
+    category VARCHAR(50),
+    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    image_path VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS inventory_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    snack_id INT NOT NULL,
+    old_qty INT NOT NULL,
+    new_qty INT NOT NULL,
+    reason ENUM('SALE', 'RESTOCK', 'MANUAL_ADJUSTMENT') NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (snack_id) REFERENCES snacks(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS combos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    price DECIMAL(10,2) NOT NULL,
+    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    image_path VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS combo_items (
+    combo_id INT NOT NULL,
+    snack_id INT NOT NULL,
+    quantity INT NOT NULL,
+    PRIMARY KEY (combo_id, snack_id),
+    FOREIGN KEY (combo_id) REFERENCES combos(id) ON DELETE CASCADE,
+    FOREIGN KEY (snack_id) REFERENCES snacks(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS snack_sales (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id INT DEFAULT NULL, 
+    total_amount DECIMAL(10,2) NOT NULL,
+    sale_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS snack_sale_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    snack_sale_id INT NOT NULL,
+    snack_id INT DEFAULT NULL,
+    combo_id INT DEFAULT NULL,
+    quantity INT NOT NULL,
+    price_at_sale DECIMAL(10,2) NOT NULL,
+    discount_applied DECIMAL(5,2) DEFAULT 0.00,
+    FOREIGN KEY (snack_sale_id) REFERENCES snack_sales(id) ON DELETE CASCADE,
+    FOREIGN KEY (snack_id) REFERENCES snacks(id) ON DELETE SET NULL,
+    FOREIGN KEY (combo_id) REFERENCES combos(id) ON DELETE SET NULL
+);
+
+-- 9. Stored Procedure: Auto-Generate Seats
 DROP PROCEDURE IF EXISTS generate_hall_seats;
 DELIMITER //
 CREATE PROCEDURE generate_hall_seats(IN p_hall_id INT, IN p_rows INT, IN p_cols INT)
@@ -122,36 +211,20 @@ BEGIN
 END //
 DELIMITER ;
 
--- 9. Seed Data: Users
+-- 10. Seed Data: Users
 INSERT IGNORE INTO users (username, password, full_name, role) VALUES
 ('admin', '123', 'System Administrator', 'ADMIN'),
-('ticket', '123', 'Counter Staff', 'TICKET_STAFF');
+('ticket', '123', 'Counter Staff', 'TICKET_STAFF'),
+('scheduler', '123', 'Movie Scheduler', 'SCHEDULER'),
+('snack', '123', 'Snack Bar Staff', 'SNACK_STAFF');
 
--- 10. Seed Data: Halls
+-- 11. Seed Data: Halls
 INSERT IGNORE INTO halls (name, total_seats, seat_rows, seat_columns) VALUES
 ('Hall A', 80, 8, 10),
 ('Hall B', 60, 6, 10),
 ('Hall C', 100, 10, 10);
 
--- 11. Generate Seats for All Halls
+-- 12. Generate Seats for All Halls
 CALL generate_hall_seats(1, 8, 10);
 CALL generate_hall_seats(2, 6, 10);
 CALL generate_hall_seats(3, 10, 10);
-
--- 12. Trigger: Auto-Schedule Movies (Temporary until Manager Role is added)
-DROP TRIGGER IF EXISTS after_movie_insert;
-DELIMITER //
-CREATE TRIGGER after_movie_insert
-AFTER INSERT ON movies
-FOR EACH ROW
-BEGIN
-    -- Assign to Hall A (ID 1) at 11:00 AM today
-    INSERT INTO shows (movie_id, hall_id, show_date, show_time, status)
-    VALUES (NEW.id, 1, CURDATE(), '11:00:00', 'SCHEDULED');
-    
-    -- Assign to Hall B (ID 2) at 6:00 PM today
-    INSERT INTO shows (movie_id, hall_id, show_date, show_time, status)
-    VALUES (NEW.id, 2, CURDATE(), '18:00:00', 'SCHEDULED');
-END //
-DELIMITER ;
-

@@ -45,6 +45,14 @@ public class MainLayoutController {
             roleLabel.setText("SYSTEM ADMIN");
             bottomRoleLabel.setText("Administrator");
             buildAdminSidebar();
+        } else if ("SCHEDULER".equals(user.getRole())) {
+            roleLabel.setText("MOVIE SCHEDULER");
+            bottomRoleLabel.setText("Scheduler");
+            buildSchedulerSidebar();
+        } else if ("SNACK_STAFF".equals(user.getRole())) {
+            roleLabel.setText("SNACK BAR STAFF");
+            bottomRoleLabel.setText("Snack Desk");
+            buildSnackSidebar();
         } else {
             roleLabel.setText("TICKET STAFF");
             bottomRoleLabel.setText("Ticket Desk");
@@ -69,6 +77,21 @@ public class MainLayoutController {
         addNavButton("Now Showing", "/views/ticket/NowShowing.fxml");
         addNavButton("Booking Ticket", "/views/ticket/BookingTicket.fxml");
         addNavButton("Ticket Desk", "/views/ticket/BookingHistory.fxml");
+    }
+
+    private void buildSchedulerSidebar() {
+        addNavButton("Overview", "/views/scheduler/SchedulerOverview.fxml");
+        addNavButton("Hall Management", "/views/scheduler/HallManagement.fxml");
+        addNavButton("Pending Shows", "/views/scheduler/PendingShows.fxml");
+        addNavButton("Currently Showing", "/views/scheduler/ShowScheduling.fxml");
+        addNavButton("Discounts", "/views/scheduler/DiscountManagement.fxml");
+    }
+
+    private void buildSnackSidebar() {
+        addNavButton("Overview", "/views/snackbar/SnackOverview.fxml");
+        addNavButton("Snack Management", "/views/snackbar/SnackManagement.fxml");
+        addNavButton("Point of Sale", "/views/snackbar/SnackPOS.fxml");
+        addNavButton("Bills & Reports", "/views/snackbar/SnackBills.fxml");
     }
 
     private void addNavButton(String title, String fxmlPath) {

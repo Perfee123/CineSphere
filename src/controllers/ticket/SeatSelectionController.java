@@ -57,9 +57,12 @@ public class SeatSelectionController {
         int cols = dims[1];
         
         List<String> mockBooked = dao.getBookedSeats(showId);
-        List<String> mockMaintenance = new ArrayList<>(); // TODO: Load maintenance from DB if needed
         
-        buildSeatGrid(rows, cols, mockBooked, mockMaintenance);
+        int hallId = dao.getHallId(showId);
+        models.HallDAO hallDAO = new models.HallDAO();
+        List<String> maintenanceSeats = hallDAO.getMaintenanceSeats(hallId);
+        
+        buildSeatGrid(rows, cols, mockBooked, maintenanceSeats);
     }
 
     // Reusable method for rendering a seat grid given specific data

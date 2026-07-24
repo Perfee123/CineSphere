@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.scheduler.SchedulerOverviewController"
+      spacing="30"
+      stylesheets="@../ticket/ticket.css"
+      style="-fx-background-color: #f8f9fa; -fx-padding: 40;">
+
+    <HBox alignment="CENTER_LEFT">
+        <VBox spacing="5" HBox.hgrow="ALWAYS">
+            <Label text="Scheduler Overview" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>
+            <Label text="Welcome back, Scheduler. Here is the daily summary." style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
+        </VBox>
+    </HBox>
+
+
+
+    <HBox spacing="15">
+        <VBox fx:id="pendingMoviesCard" styleClass="stat-card" style="-fx-border-color: #f59e0b; -fx-border-width: 1px; -fx-background-color: #fffbeb;" HBox.hgrow="ALWAYS" prefWidth="180">
+            <Label text="Pending Movies" styleClass="stat-title" style="-fx-text-fill: #d97706;"/>
+            <Label fx:id="pendingMoviesLabel" text="0" styleClass="stat-value" style="-fx-text-fill: #b45309;"/>
+            <Label text="Movies needing schedules" styleClass="stat-subtitle" style="-fx-text-fill: #d97706;"/>
+        </VBox>
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="180">
+            <Label text="Total Halls" styleClass="stat-title"/>
+            <Label fx:id="totalHallsLabel" text="0" styleClass="stat-value"/>
+            <Label text="Registered halls" styleClass="stat-subtitle"/>
+        </VBox>
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="180">
+            <Label text="Today's Shows" styleClass="stat-title"/>
+            <Label fx:id="totalShowsLabel" text="0" styleClass="stat-value"/>
+            <Label text="Shows scheduled for today" styleClass="stat-subtitle"/>
+        </VBox>
+        <VBox styleClass="stat-card" HBox.hgrow="ALWAYS" prefWidth="180">
+            <Label text="Active Discounts" styleClass="stat-title"/>
+            <Label fx:id="activeDiscountsLabel" text="0" styleClass="stat-value"/>
+            <Label text="Currently running discounts" styleClass="stat-subtitle"/>
+        </VBox>
+        <VBox styleClass="stat-card" style="-fx-border-color: #3b82f6; -fx-border-width: 1px; -fx-background-color: #eff6ff;" HBox.hgrow="ALWAYS" prefWidth="200">
+            <Label text="🎥 Most Popular Movie" styleClass="stat-title" style="-fx-text-fill: #2563eb;"/>
+            <Label fx:id="popularMovieLabel" text="Loading..." styleClass="stat-value" style="-fx-text-fill: #1d4ed8; -fx-font-size: 20px;"/>
+            <Label text="Based on total tickets sold" styleClass="stat-subtitle" style="-fx-text-fill: #2563eb;"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+        <Label text="Currently Showing" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #111111;"/>
+        
+        <TableView fx:id="recentShowsTable" VBox.vgrow="ALWAYS" styleClass="shows-table">
+            <columns>
+                <TableColumn fx:id="movieColumn" text="Movie" prefWidth="250" />
+                <TableColumn fx:id="hallColumn" text="Hall" prefWidth="100" />
+                <TableColumn fx:id="timeColumn" text="Time" prefWidth="100" />
+                <TableColumn fx:id="periodColumn" text="Period" prefWidth="100" />
+                <TableColumn fx:id="seatsColumn" text="Seats" prefWidth="100" />
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+        </TableView>
+    </VBox>
+
+</VBox>
