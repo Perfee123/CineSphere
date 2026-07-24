@@ -71,7 +71,7 @@ public class AdminOverviewController {
 
     private void loadDashboardData() {
         // Load table data
-        List<ShowTableItem> shows = showDAO.getUpcomingShows();
+        List<ShowTableItem> shows = showDAO.getTodayShows();
         ObservableList<ShowTableItem> observableShows = FXCollections.observableArrayList(shows);
         activeShowsTable.setItems(observableShows);
 

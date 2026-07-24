@@ -129,8 +129,7 @@ public class SalesReportsController {
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                String title = rs.getString("title");
-                series.getData().add(new XYChart.Data<>(title, rs.getDouble("revenue")));
+                series.getData().add(new XYChart.Data<>(rs.getString("title"), rs.getDouble("revenue")));
             }
         }
 
@@ -187,106 +186,24 @@ public class SalesReportsController {
 
     @FXML
     public void handleGenerateReport() {
-        try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/views/admin/ReportTimeframeDialog.fxml"));
-            javafx.scene.Parent root = loader.load();
-            ReportTimeframeDialogController controller = loader.getController();
-
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setTitle("Generate Report");
-            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            stage.initStyle(javafx.stage.StageStyle.UTILITY);
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.showAndWait();
-
-            if (controller.isGenerated()) {
-                String timeframe = controller.getSelectedTimeframe();
-                generateReportForTimeframe(timeframe);
-            }
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String escapeCsv(String value) {
-        if (value == null) return "";
-        if (value.startsWith("=") || value.startsWith("+") || value.startsWith("-") || value.startsWith("@")) {
-            value = "'" + value;
-        }
-        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
-            value = "\"" + value.replace("\"", "\"\"") + "\"";
-        }
-        return value;
-    }
-
-    private void generateReportForTimeframe(String timeframe) {
         javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
         fileChooser.setTitle("Save Sales Report");
-        String filename = "cinesphere_sales_report_" + timeframe.replace(" ", "_").toLowerCase() + ".csv";
-        fileChooser.setInitialFileName(filename);
+        fileChooser.setInitialFileName("cinesphere_sales_report.csv");
         fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("CSV Files", "*.csv"));
         
         java.io.File file = fileChooser.showSaveDialog(totalRevenueLabel.getScene().getWindow());
         if (file != null) {
-            String timeFilterSql = "1=1";
-            if ("Today".equals(timeframe)) {
-                timeFilterSql = "DATE(b.booking_time) = CURDATE()";
-            } else if ("This Week".equals(timeframe)) {
-                timeFilterSql = "YEARWEEK(b.booking_time, 1) = YEARWEEK(CURDATE(), 1)";
-            } else if ("This Month".equals(timeframe)) {
-                timeFilterSql = "YEAR(b.booking_time) = YEAR(CURDATE()) AND MONTH(b.booking_time) = MONTH(CURDATE())";
-            }
-            
-            String sql = "SELECT b.id, b.booking_time, m.title as movie_title, b.adult_count, b.kids_count, " +
-                         "u.full_name as sold_by, b.status, b.total_amount " +
-                         "FROM bookings b " +
-                         "JOIN shows s ON b.show_id = s.id " +
-                         "JOIN movies m ON s.movie_id = m.id " +
-                         "JOIN users u ON b.booked_by = u.id " +
-                         "WHERE " + timeFilterSql + " " +
-                         "ORDER BY b.booking_time DESC";
-
-            new Thread(() -> {
-                try (Connection conn = DBUtils.getConnection();
-                     PreparedStatement stmt = conn.prepareStatement(sql);
-                     ResultSet rs = stmt.executeQuery();
-                     java.io.PrintWriter writer = new java.io.PrintWriter(file)) {
-                     
-                    writer.println("Booking ID,Date & Time,Movie Title,Adults,Kids,Sold By,Status,Total Amount");
-                    while (rs.next()) {
-                        String title = rs.getString("movie_title");
-                        String soldBy = rs.getString("sold_by");
-                        writer.printf("%s,%s,%s,%d,%d,%s,%s,%.2f%n",
-                            escapeCsv("BK-" + rs.getInt("id")),
-                            escapeCsv(rs.getString("booking_time")),
-                            escapeCsv(title),
-                            rs.getInt("adult_count"),
-                            rs.getInt("kids_count"),
-                            escapeCsv(soldBy),
-                            escapeCsv(rs.getString("status")),
-                            rs.getDouble("total_amount")
-                        );
-                    }
-                    
-                    boolean error = writer.checkError();
-                    
-                    javafx.application.Platform.runLater(() -> {
-                        if (error) {
-                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Failed to write all data to report.");
-                            alert.showAndWait();
-                        } else {
-                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "Report generated successfully!");
-                            alert.showAndWait();
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    javafx.application.Platform.runLater(() -> {
-                        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR, "Failed to generate report.");
-                        alert.showAndWait();
-                    });
+            try (java.io.PrintWriter writer = new java.io.PrintWriter(file)) {
+                writer.println("Booking ID,Date & Time,Movie Title,Adults,Kids,Sold By,Status,Total Amount");
+                for (TransactionTableItem item : transactionTable.getItems()) {
+                    writer.printf("%s,%s,%s,%d,%d,%s,%s,%.2f%n",
+                        item.getBookingId(), item.getDateTime(), item.getMovieTitle().replace(",", " "), 
+                        item.getAdults(), item.getKids(), item.getSoldBy(), item.getStatus(), item.getTotalAmount());
                 }
-            }).start();
+                System.out.println("Report generated at " + file.getAbsolutePath());
+            } catch (java.io.IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

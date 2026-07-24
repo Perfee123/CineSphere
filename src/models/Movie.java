@@ -58,10 +58,6 @@ public class Movie {
     private String showingUntil;
     private double adultPrice;
     private double kidsPrice;
-    private double rating;
-    private double popularity;
-    private String releaseDate;
-    private String tagline;
 
     public String getShowingFrom() { return showingFrom; }
     public void setShowingFrom(String showingFrom) { this.showingFrom = showingFrom; }
@@ -74,16 +70,4 @@ public class Movie {
 
     public double getKidsPrice() { return kidsPrice; }
     public void setKidsPrice(double kidsPrice) { this.kidsPrice = kidsPrice; }
-
-    public double getRating() { return rating; }
-    public void setRating(double rating) { this.rating = rating; }
-
-    public double getPopularity() { return popularity; }
-    public void setPopularity(double popularity) { this.popularity = popularity; }
-
-    public String getReleaseDate() { return releaseDate; }
-    public void setReleaseDate(String releaseDate) { this.releaseDate = releaseDate; }
-
-    public String getTagline() { return tagline; }
-    public void setTagline(String tagline) { this.tagline = tagline; }
 }

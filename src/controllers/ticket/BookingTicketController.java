@@ -71,16 +71,10 @@ public class BookingTicketController {
                     VBox textContainer = new VBox(5);
                     Label titleLabel = new Label(movie.getTitle());
                     titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px; -fx-text-fill: " + (availableSeats > 0 ? "#212529;" : "#dc3545;"));
-                    titleLabel.setWrapText(false);
-                    titleLabel.setMaxWidth(220);
-                    titleLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
                     
                     String seatsText = availableSeats > 0 ? availableSeats + " Seats Left" : "Sold Out";
                     Label genreLabel = new Label(movie.getGenre() + " • " + seatsText);
                     genreLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: " + (availableSeats > 0 ? "#adb5bd;" : "#dc3545; -fx-font-weight: bold;"));
-                    genreLabel.setWrapText(false);
-                    genreLabel.setMaxWidth(220);
-                    genreLabel.setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
                     textContainer.getChildren().addAll(titleLabel, genreLabel);
                     
                     box.getChildren().addAll(iconLabel, textContainer);

@@ -37,16 +37,11 @@ public class MovieDAO {
                 movie.setShowingUntil(rs.getString("showing_until"));
                 movie.setAdultPrice(rs.getDouble("adult_price"));
                 movie.setKidsPrice(rs.getDouble("kids_price"));
-                movie.setRating(rs.getDouble("rating"));
-                movie.setPopularity(rs.getDouble("popularity"));
-                movie.setReleaseDate(rs.getString("release_date"));
-                movie.setTagline(rs.getString("tagline"));
                 
                 movies.add(movie);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            throw new RuntimeException("Database error: " + e.getMessage(), e);
         }
         return movies;
     }
@@ -103,7 +98,7 @@ public class MovieDAO {
     }
 
     public Movie createMovie(MovieDTO dto) {
-        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, tmdb_id, poster_path, banner_path, rating, popularity, release_date, tagline, status, adult_price, kids_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 0, 0)";
+        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, tmdb_id, poster_path, banner_path, status, adult_price, kids_price) VALUES (?, ?, ?, ?, ?, ?, ?, 'ACTIVE', 0, 0)";
         try (Connection conn = DBUtils.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             
@@ -122,32 +117,16 @@ public class MovieDAO {
             stmt.setInt(5, dto.id);
             stmt.setString(6, dto.poster_path);
             stmt.setString(7, dto.backdrop_path);
-            stmt.setDouble(8, dto.vote_average);
-            stmt.setDouble(9, dto.popularity);
-            
-            if (dto.release_date != null && !dto.release_date.trim().isEmpty()) {
-                stmt.setDate(10, java.sql.Date.valueOf(dto.release_date));
-            } else {
-                stmt.setNull(10, java.sql.Types.DATE);
-            }
-            
-            stmt.setString(11, dto.tagline != null ? dto.tagline : "");
             
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        int newId = generatedKeys.getInt(1);
-                        
-                        int runtimeToSave = dto.runtime > 0 ? dto.runtime : 120;
-                        Movie m = new Movie("M" + newId, dto.title, genre, runtimeToSave + " mins", dto.overview, new ArrayList<>());
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int id = rs.getInt(1);
+                        Movie m = new Movie("M" + id, dto.title, genre, stmt.getParameterMetaData() != null ? "120 mins" : "120 mins", dto.overview, new ArrayList<>());
                         m.setTmdbId(dto.id);
                         m.setPosterPath(dto.poster_path);
                         m.setBannerPath(dto.backdrop_path);
-                        m.setRating(dto.vote_average);
-                        m.setPopularity(dto.popularity);
-                        m.setReleaseDate(dto.release_date);
-                        m.setTagline(dto.tagline);
                         return m;
                     }
                 }
@@ -159,9 +138,9 @@ public class MovieDAO {
     }
 
     public boolean addManualMovie(Movie movie) {
-        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, poster_path, banner_path, rating, popularity, release_date, tagline, status, adult_price, kids_price, showing_from, showing_until) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?)";
+        String sql = "INSERT INTO movies (title, description, duration_minutes, genre, poster_path, banner_path, status, adult_price, kids_price, showing_from, showing_until) VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE', ?, ?, ?, ?)";
         try (Connection conn = DBUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, movie.getTitle());
             stmt.setString(2, movie.getDescription());
@@ -169,19 +148,12 @@ public class MovieDAO {
             stmt.setString(4, movie.getGenre());
             stmt.setString(5, movie.getPosterPath());
             stmt.setString(6, movie.getBannerPath());
-            stmt.setDouble(7, movie.getRating());
-            stmt.setDouble(8, movie.getPopularity());
-            stmt.setString(9, movie.getReleaseDate());
-            stmt.setString(10, movie.getTagline());
-            stmt.setDouble(11, movie.getAdultPrice());
-            stmt.setDouble(12, movie.getKidsPrice());
-            stmt.setString(13, movie.getShowingFrom());
-            stmt.setString(14, movie.getShowingUntil());
+            stmt.setDouble(7, movie.getAdultPrice());
+            stmt.setDouble(8, movie.getKidsPrice());
+            stmt.setString(9, movie.getShowingFrom());
+            stmt.setString(10, movie.getShowingUntil());
             
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows > 0) {
-                return true;
-            }
+            return stmt.executeUpdate() > 0;
         } catch (SQLException | NumberFormatException e) {
             e.printStackTrace();
         }
